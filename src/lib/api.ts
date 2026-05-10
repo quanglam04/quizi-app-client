@@ -28,13 +28,13 @@ function decodeToken(token: string) {
   try {
     const payload = token.split(".")[1];
     const decoded = JSON.parse(atob(payload));
-    // Kiểm tra token chưa hết hạn
     if (decoded.exp && decoded.exp * 1000 < Date.now()) {
       localStorage.removeItem("token");
       return null;
     }
     return decoded as {
       id: string;
+      name: string;
       email: string;
       role: "admin" | "candidate";
     };
@@ -73,7 +73,7 @@ function getInitialState(): { user: User | null; token: string | null } {
       id: decoded.id,
       email: decoded.email,
       role: decoded.role,
-      name: decoded.email, // JWT không lưu name, dùng email tạm
+      name: decoded.name || decoded.email, // JWT không lưu name, dùng email tạm
     },
   };
 }
