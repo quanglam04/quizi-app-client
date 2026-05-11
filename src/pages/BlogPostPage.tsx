@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useParams, Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { api } from '../lib/api';
 
 interface BlogPost {
@@ -71,6 +72,7 @@ export default function BlogPostPage() {
       {/* Markdown Content */}
       <div className="markdown-content bg-white p-8 rounded-xl shadow-sm border border-gray-100">
         <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
           components={{
             h1: ({ children }) => <h1 className="text-3xl font-bold text-gray-900 mt-8 mb-4">{children}</h1>,
             h2: ({ children }) => <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">{children}</h2>,
@@ -98,6 +100,24 @@ export default function BlogPostPage() {
               <a href={href} className="text-indigo-600 hover:underline font-medium" target="_blank" rel="noopener noreferrer">
                 {children}
               </a>
+            ),
+            table: ({ children }) => (
+              <div className="overflow-x-auto my-6">
+                <table className="min-w-full divide-y divide-gray-300 border border-gray-200">
+                  {children}
+                </table>
+              </div>
+            ),
+            thead: ({ children }) => <thead className="bg-gray-50">{children}</thead>,
+            th: ({ children }) => (
+              <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 border-b border-gray-200">
+                {children}
+              </th>
+            ),
+            td: ({ children }) => (
+              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 border-b border-gray-100">
+                {children}
+              </td>
             ),
           }}
         >
