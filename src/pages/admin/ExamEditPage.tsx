@@ -119,17 +119,26 @@ export default function AdminExamEdit() {
   // Mutation: Import Excel (Bulk)
   const bulkImportMutation = useMutation({
     mutationFn: async (importedQuestions: Question[]) => {
-      const response = await api.post(`/exams/${id}/questions/bulk`, {
-        questions: importedQuestions,
-      });
-      return response.data;
+      const BATCH_SIZE = 10;
+      const results = [];
+
+      // Chia thành các batch 10 câu
+      for (let i = 0; i < importedQuestions.length; i += BATCH_SIZE) {
+        const batch = importedQuestions.slice(i, i + BATCH_SIZE);
+        const response = await api.post(`/exams/${id}/questions/bulk`, {
+          questions: batch,
+        });
+        results.push(...response.data);
+      }
+
+      return results;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-exams", id] });
       alert("Đã import câu hỏi thành công!");
     },
     onError: (err: any) => {
-      alert(err.response?.data?.message || "Import thất bại");
+      alert(err.response?.data?.error || "Import thất bại");
     },
   });
 
