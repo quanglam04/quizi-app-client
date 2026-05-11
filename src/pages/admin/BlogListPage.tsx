@@ -19,7 +19,7 @@ export default function AdminBlogList() {
     queryFn: async () => {
       // Vì API public chỉ lấy published, admin có thể cần API riêng /blog/all
       // Tuy nhiên task_08.md ghi dùng GET /api/blog (chỉ lấy published - dùng tạm)
-      const response = await api.get('/blog');
+      const response = await api.get('/blog/admin/all');
       return response.data;
     },
   });

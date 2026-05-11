@@ -34,7 +34,7 @@ export default function AdminBlogEdit() {
       // If we only have ID, we need an endpoint to get by ID or the slug needs to be the ID.
       // Assuming for now the API supports GET /api/blog/:id or we fetch all and filter.
       // To be safe and follow task_06/08, let's assume if not 'new', we fetch detail.
-      const response = await api.get(`/blog/${id}`);
+      const response = await api.get(`/blog/admin/${id}`);
       return response.data;
     },
     enabled: !isNew,
