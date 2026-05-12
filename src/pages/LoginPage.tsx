@@ -20,7 +20,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (token) {
-      navigate("/", { replace: true });
+      navigate("/home", { replace: true });
     }
   }, [token, navigate]);
 
@@ -39,7 +39,7 @@ export default function LoginPage() {
       const response = await api.post("/auth/login", data);
       const { user, token } = response.data;
       login(user, token);
-      navigate("/");
+      navigate("/home");
     } catch (err: any) {
       setError(
         err.response?.data?.message || "Đăng nhập thất bại. Vui lòng thử lại.",

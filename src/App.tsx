@@ -5,6 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 // Pages
 import LoginPage      from './pages/LoginPage'
 import RegisterPage   from './pages/RegisterPage'
+import LandingPage    from './pages/LandingPage'
 import ExamListPage   from './pages/ExamListPage'
 import ExamTakePage   from './pages/ExamTakePage'
 import ExamResultPage from './pages/ExamResultPage'
@@ -27,6 +28,7 @@ import TeacherExamEdit     from './pages/teacher/ExamEditPage'
 
 // Candidate pages
 import CandidateClassroom  from './pages/candidate/ClassroomPage'
+import { useAuthStore } from './lib/api'
 
 function LayoutWrapper() {
   return (
@@ -36,10 +38,19 @@ function LayoutWrapper() {
   )
 }
 
+function LandingOrHome() {
+  const { token } = useAuthStore()
+  if (token) return <Navigate to="/home" replace />
+  return <LandingPage />
+}
+
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Public Landing */}
+        <Route path="/" element={<LandingOrHome />} />
+
         {/* Auth - No Layout */}
         <Route path="/login"    element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
@@ -51,7 +62,7 @@ export default function App() {
           <Route path="/blog/:slug" element={<BlogPostPage />} />
 
           {/* Candidate */}
-          <Route path="/" element={<ProtectedRoute><ExamListPage /></ProtectedRoute>} />
+          <Route path="/home" element={<ProtectedRoute><ExamListPage /></ProtectedRoute>} />
           <Route path="/exams/:id/take"   element={<ProtectedRoute><ExamTakePage /></ProtectedRoute>} />
           <Route path="/sessions/:id/result" element={<ProtectedRoute><ExamResultPage /></ProtectedRoute>} />
           <Route path="/history" element={<ProtectedRoute><HistoryPage /></ProtectedRoute>} />
