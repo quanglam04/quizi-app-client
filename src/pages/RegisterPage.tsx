@@ -10,7 +10,7 @@ const registerSchema = z.object({
   email: z.string().email('Email không đúng định dạng'),
   password: z.string().min(6, 'Mật khẩu phải có ít nhất 6 ký tự'),
   confirmPassword: z.string(),
-  role: z.enum(['candidate', 'admin']),
+  role: z.enum(['candidate', 'teacher']),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Mật khẩu xác nhận không khớp",
   path: ["confirmPassword"],
@@ -152,8 +152,8 @@ export default function RegisterPage() {
               {...register('role')}
               className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
             >
-              <option value="candidate">Candidate (Thí sinh)</option>
-              <option value="admin">Admin (Quản trị viên)</option>
+              <option value="candidate">Học sinh / Sinh viên</option>
+              <option value="teacher">Giáo viên</option>
             </select>
           </div>
 

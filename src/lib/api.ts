@@ -36,7 +36,7 @@ function decodeToken(token: string) {
       id: string;
       name: string;
       email: string;
-      role: "admin" | "candidate";
+      role: "admin" | "teacher" | "candidate";
     };
   } catch {
     return null;
@@ -48,7 +48,7 @@ type User = {
   id: string;
   name: string;
   email: string;
-  role: "admin" | "candidate";
+  role: "admin" | "teacher" | "candidate";
 };
 
 type AuthStore = {

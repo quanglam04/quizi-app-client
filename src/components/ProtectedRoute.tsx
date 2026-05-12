@@ -2,12 +2,17 @@ import React from 'react'
 import { Navigate } from 'react-router-dom'
 import { useAuthStore } from '../lib/api'
 
-export default function ProtectedRoute({ children, adminOnly = false }: {
+export default function ProtectedRoute({
+  children,
+  allowedRoles,        // ['admin'] hoặc ['teacher'] hoặc ['admin', 'teacher']
+}: {
   children: React.ReactNode
-  adminOnly?: boolean
+  allowedRoles?: Array<'admin' | 'teacher' | 'candidate'>
 }) {
   const { user, token } = useAuthStore()
   if (!token) return <Navigate to="/login" replace />
-  if (adminOnly && user?.role !== 'admin') return <Navigate to="/" replace />
+  if (allowedRoles && user && !allowedRoles.includes(user.role)) {
+    return <Navigate to="/" replace />
+  }
   return <>{children}</>
 }
