@@ -36,8 +36,8 @@ export default function ExamResultPage() {
     enabled: !!sessionId,
   });
 
-  if (isLoading) return <div className="text-center py-20">Đang tải kết quả...</div>;
-  if (error || !result) return <div className="text-center py-20 text-red-500">Không tìm thấy kết quả cho phiên làm bài này.</div>;
+  if (isLoading) return <div className="text-center py-20 text-white/60">Đang tải kết quả...</div>;
+  if (error || !result) return <div className="text-center py-20 text-red-400">Không tìm thấy kết quả cho phiên làm bài này.</div>;
 
   const { session, detail } = result;
   const percentage = Math.round((session.score / session.totalScore) * 100);
@@ -50,122 +50,114 @@ export default function ExamResultPage() {
   const seconds = durationInSeconds % 60;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-12">
-      {/* Score Summary */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className={`h-2 ${isPassed ? 'bg-green-500' : 'bg-red-500'}`}></div>
-        <div className="p-8 text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Kết quả bài thi</h1>
-          <div className="flex justify-center items-center space-x-8 mt-6">
-            <div className="text-center">
-              <div className="text-4xl font-extrabold text-indigo-600">
-                {session.score}/{session.totalScore}
-              </div>
-              <div className="text-sm text-gray-500 mt-1">Số câu đúng</div>
-            </div>
-            <div className="h-12 w-px bg-gray-200"></div>
-            <div className="text-center">
-              <div className={`text-4xl font-extrabold ${isPassed ? 'text-green-600' : 'text-red-600'}`}>
-                {percentage}%
-              </div>
-              <div className="text-sm text-gray-500 mt-1">Phần trăm</div>
-            </div>
-            <div className="h-12 w-px bg-gray-200"></div>
-            <div className="text-center">
-              <span className={`inline-flex items-center px-4 py-1 rounded-full text-lg font-semibold ${
-                isPassed ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-              }`}>
-                {isPassed ? 'Đạt' : 'Chưa đạt'}
-              </span>
-              <div className="text-sm text-gray-500 mt-1">Trạng thái</div>
-            </div>
-          </div>
+    <div className="max-w-3xl mx-auto space-y-12 pb-20">
+      {/* Score Card */}
+      <div className="p-8 rounded-3xl bg-gradient-to-br from-slate-800 to-slate-900 border border-white/10 text-center relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-sky-500 to-cyan-500"></div>
+        
+        <h1 className="text-xl font-bold text-white/60 mb-6">Kết quả bài thi</h1>
+        
+        <div className="text-7xl font-black mb-4 bg-gradient-to-r from-sky-400 to-cyan-400 bg-clip-text text-transparent">
+          {session.score}/{session.totalScore}
+        </div>
 
-          <div className="mt-8 grid grid-cols-2 gap-4 text-sm text-gray-600 max-w-sm mx-auto">
-            <div className="flex justify-between border-b pb-2">
-              <span>Thời gian làm bài:</span>
-              <span className="font-medium">{minutes} phút {seconds} giây</span>
-            </div>
-            <div className="flex justify-between border-b pb-2">
-              <span>Ngày thi:</span>
-              <span className="font-medium">{new Date(session.submittedAt).toLocaleDateString('vi-VN')}</span>
-            </div>
-          </div>
+        <div className={`inline-flex px-6 py-2 rounded-full text-sm font-bold mt-2 ${
+          isPassed 
+            ? 'bg-green-500/20 border border-green-500/40 text-green-400' 
+            : 'bg-red-500/20 border border-red-500/40 text-red-400'
+        }`}>
+          {isPassed ? '✓ VƯỢT QUA' : '✗ CHƯA ĐẠT'}
+        </div>
 
-          <div className="mt-8 flex justify-center space-x-4">
-            <Link
-              to="/"
-              className="px-6 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
-            >
-              Về trang chủ
-            </Link>
-            <Link
-              to="/history"
-              className="px-6 py-2 bg-indigo-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-indigo-700"
-            >
-              Xem lịch sử
-            </Link>
+        <div className="grid grid-cols-2 gap-8 mt-12 max-w-sm mx-auto">
+          <div className="text-center">
+            <div className="text-2xl font-bold text-white">{percentage}%</div>
+            <div className="text-white/40 text-xs mt-1 uppercase tracking-wider">Phần trăm</div>
           </div>
+          <div className="text-center border-l border-white/10">
+            <div className="text-2xl font-bold text-white">{minutes}m {seconds}s</div>
+            <div className="text-white/40 text-xs mt-1 uppercase tracking-wider">Thời gian</div>
+          </div>
+        </div>
+
+        <div className="mt-12 flex justify-center gap-4">
+          <Link
+            to="/home"
+            className="px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-white/70 rounded-xl font-medium transition-all"
+          >
+            Về trang chủ
+          </Link>
+          <Link
+            to="/history"
+            className="px-6 py-2.5 bg-sky-500 hover:bg-sky-400 text-white rounded-xl font-bold hover:scale-105 transition-all shadow-lg shadow-sky-500/20"
+          >
+            Xem lịch sử
+          </Link>
         </div>
       </div>
 
       {/* Question Details */}
       <div className="space-y-6">
-        <h2 className="text-xl font-bold text-gray-900">Chi tiết câu hỏi</h2>
+        <h2 className="text-2xl font-black text-white px-2">Chi tiết bài làm</h2>
         {detail.map((item, idx) => (
-          <div key={idx} className={`bg-white p-6 rounded-lg border-l-4 shadow-sm ${
-            item.isCorrect ? 'border-green-500' : item.chosenOptionId ? 'border-red-500' : 'border-gray-300'
+          <div key={idx} className={`p-6 rounded-2xl border transition-all duration-300 ${
+            item.isCorrect 
+              ? 'bg-green-500/5 border-green-500/20' 
+              : item.chosenOptionId 
+                ? 'bg-red-500/5 border-red-500/20' 
+                : 'bg-slate-900 border-white/10'
           }`}>
-            <div className="flex items-start">
-              <span className="font-bold text-gray-500 mr-3">Câu {idx + 1}:</span>
+            <div className="flex items-start gap-4">
+              <span className="flex-shrink-0 w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-sm font-bold text-white/40">
+                {idx + 1}
+              </span>
               <div className="flex-grow">
-                <p className="text-lg text-gray-800 font-medium mb-4">{item.questionContent}</p>
+                <p className="text-lg text-white font-medium mb-6 leading-relaxed">{item.questionContent}</p>
                 
-                <div className="space-y-2 mb-4">
-                  <div>
-                    <span className="text-sm font-medium text-gray-500 mr-2">Bạn chọn:</span>
+                <div className="space-y-3 mb-6">
+                  {/* Your Answer */}
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-xs font-bold text-white/30 uppercase tracking-widest">Bạn chọn</span>
                     {item.chosenOptionContent ? (
-                      <span className={`inline-flex items-center px-3 py-1 rounded text-sm font-medium ${
-                        item.isCorrect ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                      <div className={`flex items-center justify-between p-3 rounded-xl border ${
+                        item.isCorrect 
+                          ? 'bg-green-500/10 border-green-500/30 text-green-400' 
+                          : 'bg-red-500/10 border-red-500/30 text-red-400'
                       }`}>
-                        {item.chosenOptionContent}
+                        <span className="font-medium">{item.chosenOptionContent}</span>
                         {item.isCorrect ? (
-                          <svg className="ml-1.5 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                          </svg>
+                          <span className="text-xs font-bold">ĐÚNG ✓</span>
                         ) : (
-                          <svg className="ml-1.5 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                          </svg>
+                          <span className="text-xs font-bold">SAI ✗</span>
                         )}
-                      </span>
+                      </div>
                     ) : (
-                      <span className="text-sm text-gray-400 italic">Bỏ qua</span>
+                      <div className="p-3 rounded-xl border border-white/5 bg-white/5 text-white/30 italic text-sm">
+                        Bỏ qua
+                      </div>
                     )}
                   </div>
 
+                  {/* Correct Answer if you were wrong */}
                   {!item.isCorrect && item.correctOptionContent && (
-                    <div>
-                      <span className="text-sm font-medium text-gray-500 mr-2">Đáp án đúng:</span>
-                      <span className="inline-flex items-center px-3 py-1 rounded text-sm font-medium bg-green-100 text-green-800">
+                    <div className="flex flex-col gap-1.5">
+                      <span className="text-xs font-bold text-sky-400/30 uppercase tracking-widest">Đáp án đúng</span>
+                      <div className="p-3 rounded-xl border border-sky-500/30 bg-sky-500/10 text-sky-400 font-medium">
                         {item.correctOptionContent}
-                        <svg className="ml-1.5 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                      </span>
+                      </div>
                     </div>
                   )}
                 </div>
 
                 {item.questionExplain && (
-                  <div className="bg-blue-50 p-4 rounded-md">
-                    <p className="text-sm font-semibold text-blue-800 mb-1 flex items-center">
-                      <svg className="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="bg-sky-500/5 border border-sky-500/10 p-4 rounded-xl">
+                    <p className="text-xs font-bold text-sky-400 mb-2 flex items-center gap-2">
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
-                      Giải thích:
+                      GIẢI THÍCH
                     </p>
-                    <p className="text-sm text-blue-700 leading-relaxed">{item.questionExplain}</p>
+                    <p className="text-sm text-white/60 leading-relaxed italic">{item.questionExplain}</p>
                   </div>
                 )}
               </div>

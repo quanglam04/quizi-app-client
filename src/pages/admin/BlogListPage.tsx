@@ -56,84 +56,95 @@ export default function AdminBlogList() {
     toggleMutation.mutate({ id, isPublished: !currentStatus });
   };
 
-  if (isLoading) return <div className="text-center py-20">Đang tải danh sách bài viết...</div>;
+  if (isLoading) return <div className="text-center py-20 text-white/60">Đang tải danh sách bài viết...</div>;
   if (error) return <div className="text-center py-20 text-red-500">Đã có lỗi xảy ra.</div>;
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">Quản lý Blog</h1>
+    <div className="max-w-6xl mx-auto space-y-8 pb-20">
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="text-3xl font-black text-white">Quản lý Blog</h1>
+          <p className="text-white/40 text-sm mt-1">
+            Viết và quản lý các bài chia sẻ kiến thức
+          </p>
+        </div>
         <button
           onClick={() => navigate('/admin/blog/new/edit')}
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
+          className="px-5 py-2.5 bg-sky-500 hover:bg-sky-400 text-white rounded-xl font-bold hover:scale-105 transition-all duration-200 flex items-center gap-2 shadow-lg shadow-sky-500/20"
         >
-          <svg className="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
           </svg>
           Viết bài mới
         </button>
       </div>
 
-      <div className="bg-white shadow overflow-hidden sm:rounded-md border border-gray-200">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tiêu đề</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Slug</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng thái</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ngày tạo</th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Thao tác</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {posts?.length === 0 ? (
+      <div className="rounded-2xl overflow-hidden border border-white/10 bg-slate-900 shadow-xl">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-slate-800">
               <tr>
-                <td colSpan={5} className="px-6 py-12 text-center text-gray-500 italic">Chưa có bài viết nào.</td>
+                <th className="px-6 py-4 text-left text-white/40 text-xs font-bold uppercase tracking-widest">Tiêu đề</th>
+                <th className="px-6 py-4 text-left text-white/40 text-xs font-bold uppercase tracking-widest">Slug</th>
+                <th className="px-6 py-4 text-left text-white/40 text-xs font-bold uppercase tracking-widest">Trạng thái</th>
+                <th className="px-6 py-4 text-left text-white/40 text-xs font-bold uppercase tracking-widest">Ngày tạo</th>
+                <th className="px-6 py-4 text-right text-white/40 text-xs font-bold uppercase tracking-widest">Thao tác</th>
               </tr>
-            ) : (
-              posts?.map((post) => (
-                <tr key={post.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-bold text-gray-900 truncate max-w-xs">{post.title}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-500 font-mono text-xs">{post.slug}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      post.isPublished ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                    }`}>
-                      {post.isPublished ? 'Published' : 'Draft'}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {new Date(post.createdAt).toLocaleDateString('vi-VN')}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-3">
-                    <button
-                      onClick={() => handleToggle(post.id, post.isPublished)}
-                      className={`text-xs ${post.isPublished ? 'text-orange-600 hover:text-orange-900' : 'text-green-600 hover:text-green-900'}`}
-                    >
-                      {post.isPublished ? 'Hạ xuống Draft' : 'Công khai'}
-                    </button>
-                    <Link
-                      to={`/admin/blog/${post.id}/edit`}
-                      className="text-indigo-600 hover:text-indigo-900"
-                    >
-                      Sửa
-                    </Link>
-                    <button
-                      onClick={() => handleDelete(post.id, post.title)}
-                      className="text-red-600 hover:text-red-900"
-                    >
-                      Xóa
-                    </button>
-                  </td>
+            </thead>
+            <tbody className="divide-y divide-white/5">
+              {posts?.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="px-6 py-12 text-center text-white/20 italic">Chưa có bài viết nào.</td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                posts?.map((post) => (
+                  <tr key={post.id} className="hover:bg-white/5 transition-colors group">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-bold text-white group-hover:text-sky-400 transition-colors truncate max-w-xs">{post.title}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-[10px] text-white/40 font-mono">{post.slug}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`inline-flex px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
+                        post.isPublished 
+                          ? 'bg-green-500/10 border border-green-500/30 text-green-400' 
+                          : 'bg-slate-700 border border-white/10 text-white/40'
+                      }`}>
+                        {post.isPublished ? 'Published' : 'Draft'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-white/40">
+                      {new Date(post.createdAt).toLocaleDateString('vi-VN')}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <div className="flex items-center justify-end gap-3">
+                        <button
+                          onClick={() => handleToggle(post.id, post.isPublished)}
+                          className={`text-xs font-bold transition-colors ${post.isPublished ? 'text-amber-400/60 hover:text-amber-400' : 'text-sky-400/60 hover:text-sky-400'}`}
+                        >
+                          {post.isPublished ? 'Draft' : 'Publish'}
+                        </button>
+                        <Link
+                          to={`/admin/blog/${post.id}/edit`}
+                          className="px-3 py-1.5 rounded-lg bg-sky-500/10 text-sky-400 text-xs font-bold hover:bg-sky-500 hover:text-white transition-all"
+                        >
+                          Sửa
+                        </Link>
+                        <button
+                          onClick={() => handleDelete(post.id, post.title)}
+                          className="text-red-400/40 hover:text-red-400 text-xs font-bold transition-colors p-1.5 hover:bg-red-500/10 rounded-lg"
+                        >
+                          Xóa
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

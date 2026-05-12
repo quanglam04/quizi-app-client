@@ -62,132 +62,117 @@ export default function AdminExamList() {
 
   if (isLoading)
     return (
-      <div className="text-center py-20">Đang tải danh sách đề thi...</div>
+      <div className="text-center py-20 text-white/60">Đang tải danh sách đề thi...</div>
     );
   if (error)
     return (
-      <div className="text-center py-20 text-red-500">Đã có lỗi xảy ra.</div>
+      <div className="text-center py-20 text-red-400">Đã có lỗi xảy ra.</div>
     );
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">Quản lý đề thi</h1>
+    <div className="max-w-6xl mx-auto space-y-8 pb-20">
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="text-3xl font-black text-white">Quản lý đề thi</h1>
+          <p className="text-white/40 text-sm mt-1">
+            Tạo và quản lý ngân hàng đề thi của hệ thống
+          </p>
+        </div>
         <button
           onClick={() => navigate("/admin/exams/new")}
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
+          className="px-5 py-2.5 bg-sky-500 hover:bg-sky-400 text-white rounded-xl font-bold hover:scale-105 transition-all duration-200 flex items-center gap-2 shadow-lg shadow-sky-500/20"
         >
-          <svg
-            className="-ml-1 mr-2 h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-            />
+          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
           </svg>
           Tạo đề mới
         </button>
       </div>
 
-      <div className="bg-white shadow overflow-hidden sm:rounded-md border border-gray-200">
-        <ul className="divide-y divide-gray-200">
-          {exams?.length === 0 ? (
-            <li className="px-6 py-12 text-center text-gray-500">
-              Chưa có đề thi nào. Hãy tạo mới!
-            </li>
-          ) : (
-            exams
-              ?.sort(
-                (a, b) =>
-                  new Date(b.createdAt).getTime() -
-                  new Date(a.createdAt).getTime(),
-              )
-              .map((exam) => (
-                <li
-                  key={exam.id}
-                  className="hover:bg-gray-50 transition-colors"
-                >
-                  <div className="px-6 py-4 flex items-center justify-between">
-                    <div className="flex-grow min-w-0 pr-4">
-                      <div className="flex items-center">
-                        <p className="text-sm font-bold text-indigo-600 truncate">
-                          {exam.title}
-                        </p>
-                        <span
-                          className={`ml-3 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            exam.isPublished
-                              ? "bg-green-100 text-green-800"
-                              : "bg-gray-100 text-gray-800"
-                          }`}
+      <div className="rounded-2xl overflow-hidden border border-white/10 bg-slate-900 shadow-xl">
+        <table className="w-full">
+          <thead className="bg-slate-800">
+            <tr>
+              <th className="px-6 py-4 text-left text-white/40 text-xs font-bold uppercase tracking-widest">
+                Tên đề thi
+              </th>
+              <th className="px-6 py-4 text-left text-white/40 text-xs font-bold uppercase tracking-widest">
+                Thông tin
+              </th>
+              <th className="px-6 py-4 text-left text-white/40 text-xs font-bold uppercase tracking-widest">
+                Trạng thái
+              </th>
+              <th className="px-6 py-4 text-right text-white/40 text-xs font-bold uppercase tracking-widest">
+                Thao tác
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-white/5">
+            {exams?.length === 0 ? (
+              <tr>
+                <td colSpan={4} className="px-6 py-12 text-center text-white/20 italic">
+                  Chưa có đề thi nào. Hãy tạo mới!
+                </td>
+              </tr>
+            ) : (
+              exams
+                ?.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                .map((exam) => (
+                  <tr key={exam.id} className="hover:bg-white/5 transition-colors group">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-bold text-white group-hover:text-sky-400 transition-colors">
+                        {exam.title}
+                      </div>
+                      <div className="text-xs text-white/40 mt-0.5">
+                        Tạo ngày: {new Date(exam.createdAt).toLocaleDateString("vi-VN")}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center gap-1.5 text-white/40 text-xs">
+                        <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        {exam.duration} phút
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span
+                        className={`inline-flex px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
+                          exam.isPublished
+                            ? "bg-green-500/10 border border-green-500/30 text-green-400"
+                            : "bg-slate-700 border border-white/10 text-white/40"
+                        }`}
+                      >
+                        {exam.isPublished ? "Published" : "Draft"}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <div className="flex items-center justify-end gap-3">
+                        <button
+                          onClick={() => handleToggle(exam.id, exam.isPublished)}
+                          className={`text-xs font-bold transition-colors ${exam.isPublished ? "text-amber-400/60 hover:text-amber-400" : "text-sky-400/60 hover:text-sky-400"}`}
                         >
-                          {exam.isPublished ? "Published" : "Draft"}
-                        </span>
+                          {exam.isPublished ? "Draft" : "Publish"}
+                        </button>
+                        <Link
+                          to={`/admin/exams/${exam.id}`}
+                          className="px-3 py-1.5 rounded-lg bg-sky-500/10 text-sky-400 text-xs font-bold hover:bg-sky-500 hover:text-white transition-all"
+                        >
+                          Sửa
+                        </Link>
+                        <button
+                          onClick={() => handleDelete(exam.id, exam.title)}
+                          className="text-red-400/40 hover:text-red-400 text-xs font-bold transition-colors p-1.5 hover:bg-red-500/10 rounded-lg"
+                        >
+                          Xóa
+                        </button>
                       </div>
-                      <div className="mt-2 flex items-center text-sm text-gray-500 space-x-4">
-                        <div className="flex items-center">
-                          <svg
-                            className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                          </svg>
-                          {exam.duration} phút
-                        </div>
-                        <div className="flex items-center">
-                          <svg
-                            className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                            />
-                          </svg>
-                          {new Date(exam.createdAt).toLocaleDateString("vi-VN")}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <button
-                        onClick={() => handleToggle(exam.id, exam.isPublished)}
-                        className={`text-sm font-medium ${exam.isPublished ? "text-orange-600 hover:text-orange-900" : "text-green-600 hover:text-green-900"}`}
-                      >
-                        {exam.isPublished ? "Hạ xuống Draft" : "Công khai"}
-                      </button>
-                      <Link
-                        to={`/admin/exams/${exam.id}`}
-                        className="text-indigo-600 hover:text-indigo-900 text-sm font-medium"
-                      >
-                        Chỉnh sửa
-                      </Link>
-                      <button
-                        onClick={() => handleDelete(exam.id, exam.title)}
-                        className="text-red-600 hover:text-red-900 text-sm font-medium"
-                      >
-                        Xóa
-                      </button>
-                    </div>
-                  </div>
-                </li>
-              ))
-          )}
-        </ul>
+                    </td>
+                  </tr>
+                ))
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
   );

@@ -21,15 +21,18 @@ export default function BlogListPage() {
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
-        <h1 className="text-3xl font-extrabold text-gray-900">Blog ôn luyện</h1>
-        <div className="grid grid-cols-1 gap-8">
+      <div className="space-y-8 max-w-4xl mx-auto">
+        <div>
+          <h1 className="text-3xl font-black text-white">Blog ôn luyện</h1>
+          <p className="text-white/40 mt-1">Đang tải các bài viết kiến thức...</p>
+        </div>
+        <div className="grid grid-cols-1 gap-6">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 animate-pulse">
-              <div className="h-6 bg-gray-200 rounded w-1/2 mb-4"></div>
-              <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
-              <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
-              <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+            <div key={i} className="bg-slate-800/50 p-6 rounded-2xl border border-white/10 animate-pulse">
+              <div className="h-6 bg-slate-700 rounded w-1/2 mb-4"></div>
+              <div className="h-4 bg-slate-700 rounded w-full mb-2"></div>
+              <div className="h-4 bg-slate-700 rounded w-3/4 mb-6"></div>
+              <div className="h-4 bg-slate-700 rounded w-24"></div>
             </div>
           ))}
         </div>
@@ -39,53 +42,56 @@ export default function BlogListPage() {
 
   if (error) {
     return (
-      <div className="text-center py-12">
-        <p className="text-red-500">Đã có lỗi xảy ra khi tải danh sách bài viết. Vui lòng thử lại sau.</p>
+      <div className="text-center py-20 text-red-400">
+        Đã có lỗi xảy ra khi tải danh sách bài viết. Vui lòng thử lại sau.
       </div>
     );
   }
 
   return (
-    <div className="space-y-8 max-w-4xl mx-auto">
-      <div className="flex flex-col md:flex-row md:items-baseline md:justify-between border-b border-gray-200 pb-5">
-        <h1 className="text-3xl font-extrabold text-gray-900">Blog ôn luyện</h1>
-        <p className="mt-2 text-sm text-gray-500 md:mt-0">Chia sẻ kinh nghiệm và kiến thức thi cử</p>
+    <div className="space-y-12 max-w-4xl mx-auto pb-20">
+      <div className="flex flex-col md:flex-row md:items-baseline md:justify-between border-b border-white/10 pb-6">
+        <h1 className="text-3xl font-black text-white">Blog ôn luyện</h1>
+        <p className="mt-2 text-sm text-white/40 md:mt-0 italic">Chia sẻ kinh nghiệm và kiến thức thi cử</p>
       </div>
 
       {posts?.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center text-gray-500">
+        <div className="bg-slate-800/50 rounded-2xl border border-white/10 p-12 text-center text-white/40">
           Hiện tại chưa có bài viết nào.
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-10">
+        <div className="grid grid-cols-1 gap-8">
           {posts?.map((post) => (
-            <article key={post.id} className="group relative flex flex-col items-start">
-              <h2 className="text-2xl font-bold tracking-tight text-gray-800 group-hover:text-indigo-600 transition-colors">
-                <Link to={`/blog/${post.slug}`}>
-                  <span className="absolute -inset-x-4 -inset-y-6 z-20 sm:-inset-x-6 sm:rounded-2xl"></span>
-                  <span className="relative z-10">{post.title}</span>
-                </Link>
-              </h2>
-              <time className="relative z-10 order-first mb-3 flex items-center text-sm text-gray-400 pl-3.5">
-                <span className="absolute inset-y-0 left-0 flex items-center" aria-hidden="true">
-                  <span className="h-4 w-0.5 rounded-full bg-gray-200"></span>
-                </span>
-                {new Date(post.createdAt).toLocaleDateString('vi-VN', {
-                  day: 'numeric',
-                  month: 'long',
-                  year: 'numeric'
-                })}
-              </time>
-              <p className="relative z-10 mt-2 text-sm text-gray-600 leading-relaxed">
-                {post.excerpt || 'Đang cập nhật nội dung mô tả...'}
-              </p>
-              <div className="relative z-10 mt-4 flex items-center text-sm font-medium text-indigo-600">
-                Đọc bài viết
-                <svg className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
+            <Link
+              key={post.id}
+              to={`/blog/${post.slug}`}
+              className="block p-8 rounded-2xl bg-slate-800/50 border border-white/10
+              hover:-translate-y-1 hover:border-sky-500/40 hover:shadow-lg hover:shadow-sky-500/10
+              transition-all duration-300 group"
+            >
+              <div className="flex flex-col gap-4">
+                <time className="text-xs font-bold text-sky-400 uppercase tracking-widest">
+                  {new Date(post.createdAt).toLocaleDateString('vi-VN', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                  })}
+                </time>
+                
+                <h2 className="text-2xl font-bold text-white group-hover:text-sky-400 transition-colors leading-tight">
+                  {post.title}
+                </h2>
+                
+                <p className="text-white/60 leading-relaxed line-clamp-2">
+                  {post.excerpt || 'Đang cập nhật nội dung mô tả...'}
+                </p>
+                
+                <div className="flex items-center gap-2 text-sky-400 text-sm font-bold mt-2">
+                  Đọc bài viết 
+                  <span className="group-hover:translate-x-1 transition-transform">→</span>
+                </div>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       )}

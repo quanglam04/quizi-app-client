@@ -271,15 +271,15 @@ export default function AdminExamEdit() {
   };
 
   if (isLoading)
-    return <div className="text-center py-20">Đang tải dữ liệu...</div>;
+    return <div className="text-center py-20 text-white/60">Đang tải dữ liệu...</div>;
 
   return (
-    <div className="space-y-10 pb-20">
+    <div className="max-w-5xl mx-auto space-y-10 pb-20">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <button
             onClick={() => navigate("/admin/exams")}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-white/40 hover:text-white transition-colors"
           >
             <svg
               className="h-6 w-6"
@@ -295,77 +295,78 @@ export default function AdminExamEdit() {
               />
             </svg>
           </button>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-3xl font-black text-white">
             {isNew ? "Tạo đề thi mới" : "Chỉnh sửa đề thi"}
           </h1>
         </div>
         <button
           onClick={handleSubmit(handleSaveExam)}
           disabled={saveExamMutation.isPending}
-          className="px-6 py-2 bg-indigo-600 text-white rounded-md font-medium hover:bg-indigo-700 disabled:opacity-50"
+          className="px-6 py-2.5 bg-sky-500 hover:bg-sky-400 text-white rounded-xl font-bold hover:scale-105 transition-all duration-200 disabled:opacity-50 shadow-lg shadow-sky-500/20"
         >
-          {saveExamMutation.isPending ? "Đang lưu..." : "Lưu thông tin đề"}
+          {saveExamMutation.isPending ? "Đang lưu..." : "Lưu đề thi →"}
         </button>
       </div>
 
       {/* Section 1: Thông tin đề thi */}
-      <section className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm space-y-4">
-        <h2 className="text-lg font-semibold border-b pb-2 mb-4">
+      <section className="bg-slate-900 rounded-2xl border border-white/10 p-8 space-y-8 shadow-xl">
+        <h2 className="text-white font-bold text-lg flex items-center gap-2">
+          <span className="w-1.5 h-6 bg-sky-500 rounded-full"></span>
           Thông tin chung
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="col-span-2">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-bold text-white/60 mb-2 uppercase tracking-widest">
               Tên đề thi
             </label>
             <input
               type="text"
               {...register("title")}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              placeholder="Nhập tên đề thi..."
+              className="w-full px-4 py-3 rounded-xl bg-slate-800 border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all duration-200"
             />
             {errors.title && (
-              <p className="mt-1 text-xs text-red-500">
+              <p className="mt-2 text-xs text-red-400">
                 {errors.title.message}
               </p>
             )}
           </div>
           <div className="col-span-2">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-bold text-white/60 mb-2 uppercase tracking-widest">
               Mô tả
             </label>
             <textarea
               {...register("description")}
               rows={3}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              placeholder="Mô tả nội dung bài thi..."
+              className="w-full px-4 py-3 rounded-xl bg-slate-800 border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all duration-200"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-bold text-white/60 mb-2 uppercase tracking-widest">
               Thời gian làm bài (phút)
             </label>
             <input
               type="number"
               {...register("duration")}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="w-full px-4 py-3 rounded-xl bg-slate-800 border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all duration-200"
             />
             {errors.duration && (
-              <p className="mt-1 text-xs text-red-500">
+              <p className="mt-2 text-xs text-red-400">
                 {errors.duration.message}
               </p>
             )}
           </div>
           <div className="flex items-center h-full pt-6">
-            <input
-              id="isPublished"
-              type="checkbox"
-              {...register("isPublished")}
-              className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-            />
-            <label
-              htmlFor="isPublished"
-              className="ml-2 block text-sm text-gray-900 font-medium"
-            >
-              Công khai đề thi (Published)
+            <label className="flex items-center gap-3 cursor-pointer group">
+              <input
+                type="checkbox"
+                {...register("isPublished")}
+                className="w-5 h-5 accent-sky-500 rounded border-white/10 bg-slate-800"
+              />
+              <span className="text-white/70 group-hover:text-white transition-colors font-medium">
+                Công khai đề thi (Published)
+              </span>
             </label>
           </div>
         </div>
@@ -373,27 +374,27 @@ export default function AdminExamEdit() {
 
       {/* Section 2: Danh sách câu hỏi */}
       <section
-        className={`space-y-4 ${isNew ? "opacity-50 pointer-events-none" : ""}`}
+        className={`space-y-6 ${isNew ? "opacity-30 pointer-events-none" : ""}`}
       >
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-xl font-bold text-gray-900">
-              Danh sách câu hỏi ({questions.length})
+            <h2 className="text-2xl font-black text-white">
+              Ngân hàng câu hỏi ({questions.length})
             </h2>
             {isNew && (
-              <p className="text-xs text-orange-600 font-medium">
-                Lưu đề thi trước khi quản lý câu hỏi
+              <p className="text-xs text-amber-400 font-bold mt-1 uppercase tracking-wider">
+                ⚠ Lưu đề thi trước khi quản lý câu hỏi
               </p>
             )}
           </div>
-          <div className="flex space-x-2">
+          <div className="flex flex-wrap gap-2">
             <button
               onClick={downloadTemplate}
-              className="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50"
+              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white/70 rounded-xl text-xs font-bold transition-all border border-white/10"
             >
-              Tải template Excel
+              Tải Template
             </button>
-            <label className="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 cursor-pointer">
+            <label className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white/70 rounded-xl text-xs font-bold transition-all border border-white/10 cursor-pointer">
               Import Excel
               <input
                 type="file"
@@ -407,9 +408,9 @@ export default function AdminExamEdit() {
                 setEditingQuestionIdx(null);
                 setShowQuestionForm(true);
               }}
-              className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
+              className="px-4 py-2 bg-sky-500/10 border border-sky-500/30 text-sky-400 rounded-xl text-xs font-bold hover:bg-sky-500 hover:text-white transition-all"
             >
-              Thêm câu hỏi
+              + Thêm câu hỏi
             </button>
           </div>
         </div>
@@ -418,10 +419,13 @@ export default function AdminExamEdit() {
           {addQuestionMutation.isPending ||
           bulkImportMutation.isPending ||
           deleteQuestionMutation.isPending ? (
-            <div className="text-center py-10 text-gray-500">Đang xử lý...</div>
+            <div className="text-center py-20 bg-slate-900 rounded-2xl border border-white/10">
+              <div className="animate-spin h-8 w-8 border-4 border-sky-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+              <p className="text-white/40 text-sm font-bold uppercase tracking-widest">Đang xử lý dữ liệu...</p>
+            </div>
           ) : questions.length === 0 ? (
-            <div className="text-center py-10 bg-gray-50 border-2 border-dashed border-gray-200 rounded-lg text-gray-500 italic">
-              Chưa có câu hỏi nào.
+            <div className="text-center py-16 bg-slate-900 border-2 border-dashed border-white/5 rounded-2xl text-white/20 italic">
+              Ngân hàng câu hỏi trống. Hãy bắt đầu thêm câu hỏi đầu tiên!
             </div>
           ) : (
             questions
@@ -429,47 +433,47 @@ export default function AdminExamEdit() {
               .map((q, idx) => (
                 <div
                   key={q.id || idx}
-                  className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm flex items-start justify-between"
+                  className="bg-slate-900 p-6 rounded-2xl border border-white/10 hover:border-sky-500/30 transition-all group flex items-start justify-between"
                 >
-                  <div>
-                    <div className="flex items-center space-x-2 mb-1">
-                      <span className="font-bold text-indigo-600">
-                        Câu {q.order}:
+                  <div className="flex-grow">
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="flex-shrink-0 w-7 h-7 bg-sky-500/10 text-sky-400 border border-sky-500/20 rounded-lg flex items-center justify-center text-xs font-black">
+                        {q.order}
                       </span>
-                      <span className="text-xs font-medium bg-gray-100 px-2 py-0.5 rounded uppercase">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest bg-white/5 text-white/40 border border-white/10">
                         {q.type}
                       </span>
                     </div>
-                    <p className="text-gray-800">{q.content}</p>
-                    <div className="mt-2 space-y-1">
+                    <p className="text-white text-lg font-medium leading-relaxed mb-6">{q.content}</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {q.options
                         .sort((a, b) => a.order - b.order)
                         .map((opt, oIdx) => (
                           <div
                             key={opt.id || oIdx}
-                            className={`text-sm flex items-center gap-1 ${
+                            className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${
                               opt.isCorrect
-                                ? "text-green-600 font-semibold"
-                                : "text-gray-500"
+                                ? "bg-green-500/10 border-green-500/30 text-green-400"
+                                : "bg-slate-800/50 border-white/5 text-white/40"
                             }`}
                           >
-                            <span>{String.fromCharCode(65 + oIdx)}.</span>
-                            <span>{opt.content}</span>
-                            {opt.isCorrect && (
-                              <span className="ml-1 text-xs bg-green-100 text-green-700 px-1.5 py-0.5 rounded">
-                                ✓ Đúng
-                              </span>
-                            )}
+                            <span className="font-black text-[10px] uppercase opacity-40">
+                              {String.fromCharCode(65 + oIdx)}
+                            </span>
+                            <span className="text-sm font-medium">{opt.content}</span>
                           </div>
                         ))}
                     </div>
                   </div>
-                  <div className="flex space-x-2 ml-4">
+                  <div className="flex items-center gap-2 ml-6">
                     <button
                       onClick={() => removeQuestion(idx)}
-                      className="text-red-600 hover:text-red-900 text-xs font-medium"
+                      className="p-2 text-white/20 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all"
+                      title="Xóa câu hỏi"
                     >
-                      Xóa
+                      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
                     </button>
                   </div>
                 </div>
@@ -538,13 +542,13 @@ function QuestionFormModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <div className="p-6 border-b flex justify-between items-center sticky top-0 bg-white z-10">
-          <h3 className="text-xl font-bold text-gray-900">Thêm câu hỏi mới</h3>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+      <div className="bg-slate-900 rounded-3xl shadow-2xl w-full max-w-2xl border border-white/10 overflow-hidden">
+        <div className="p-6 border-b border-white/10 flex justify-between items-center bg-slate-900">
+          <h3 className="text-xl font-black text-white">THÊM CÂU HỎI</h3>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-white/40 hover:text-white transition-colors"
           >
             <svg
               className="h-6 w-6"
@@ -561,45 +565,47 @@ function QuestionFormModal({
             </svg>
           </button>
         </div>
-        <div className="p-6 space-y-6">
+        <div className="p-8 space-y-8 max-h-[70vh] overflow-y-auto custom-scrollbar">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-xs font-bold text-white/40 uppercase tracking-widest mb-3">
               Nội dung câu hỏi
             </label>
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
               rows={3}
-              className="w-full border border-gray-300 rounded-md shadow-sm p-2 text-sm"
-              placeholder="Nhập câu hỏi..."
+              className="w-full px-4 py-3 rounded-xl bg-slate-800 border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all"
+              placeholder="Nhập câu hỏi tại đây..."
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Loại câu hỏi
-            </label>
-            <select
-              value={type}
-              onChange={(e) => setType(e.target.value as "single" | "multiple")}
-              className="w-full border border-gray-300 rounded-md shadow-sm p-2 text-sm"
-            >
-              <option value="single">Single Choice</option>
-              <option value="multiple">Multiple Choice</option>
-            </select>
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <label className="block text-xs font-bold text-white/40 uppercase tracking-widest mb-3">
+                Loại câu hỏi
+              </label>
+              <select
+                value={type}
+                onChange={(e) => setType(e.target.value as "single" | "multiple")}
+                className="w-full px-4 py-3 rounded-xl bg-slate-800 border border-white/10 text-white focus:outline-none focus:border-sky-500 transition-all"
+              >
+                <option value="single">Single Choice</option>
+                <option value="multiple">Multiple Choice</option>
+              </select>
+            </div>
           </div>
 
-          <div className="space-y-3">
-            <label className="block text-sm font-medium text-gray-700">
-              Các phương án trả lời
+          <div className="space-y-4">
+            <label className="block text-xs font-bold text-white/40 uppercase tracking-widest mb-1">
+              Các phương án trả lời (Tick vào đáp án đúng)
             </label>
             {options.map((opt, idx) => (
-              <div key={idx} className="flex items-center space-x-3">
+              <div key={idx} className="flex items-center gap-4">
                 <input
                   type={type === "single" ? "radio" : "checkbox"}
                   checked={opt.isCorrect}
                   onChange={() => handleToggleCorrect(idx)}
-                  className="h-5 w-5 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                  className="h-5 w-5 accent-sky-500"
                 />
                 <input
                   type="text"
@@ -609,7 +615,7 @@ function QuestionFormModal({
                     next[idx].content = e.target.value;
                     setOptions(next);
                   }}
-                  className="flex-grow border border-gray-300 rounded-md shadow-sm p-2 text-sm"
+                  className="flex-grow px-4 py-3 rounded-xl bg-slate-800 border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-sky-500 transition-all"
                   placeholder={`Đáp án ${String.fromCharCode(65 + idx)}`}
                 />
               </div>
@@ -617,29 +623,29 @@ function QuestionFormModal({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-xs font-bold text-white/40 uppercase tracking-widest mb-3">
               Giải thích (Optional)
             </label>
             <textarea
               value={explain}
               onChange={(e) => setExplain(e.target.value)}
               rows={2}
-              className="w-full border border-gray-300 rounded-md shadow-sm p-2 text-sm"
-              placeholder="Giải thích..."
+              className="w-full px-4 py-3 rounded-xl bg-slate-800 border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-sky-500 transition-all"
+              placeholder="Giải thích tại sao đáp án này đúng..."
             />
           </div>
         </div>
-        <div className="p-6 border-t flex justify-end space-x-3 bg-gray-50 rounded-b-xl">
+        <div className="p-6 border-t border-white/10 flex justify-end gap-3 bg-slate-900/50">
           <button
             onClick={onClose}
-            className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-white"
+            className="px-6 py-2.5 text-white/40 font-bold hover:text-white transition-colors"
           >
-            Hủy
+            Hủy bỏ
           </button>
           <button
             onClick={handleSave}
             disabled={loading}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-md text-sm font-medium hover:bg-indigo-700 disabled:opacity-50"
+            className="px-8 py-2.5 bg-sky-500 hover:bg-sky-400 text-white rounded-xl font-bold transition-all disabled:opacity-50"
           >
             {loading ? "Đang lưu..." : "Xác nhận"}
           </button>

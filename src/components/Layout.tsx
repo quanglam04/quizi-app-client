@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../lib/api';
 
 interface LayoutProps {
@@ -16,104 +16,125 @@ export default function Layout({ children }: LayoutProps) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
-      <header className="bg-white shadow-sm">
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex flex-col bg-slate-950 text-white">
+      <nav className="sticky top-0 z-50 backdrop-blur-md bg-slate-900/90 border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
-            <div className="flex">
-              <div className="flex-shrink-0 flex items-center">
-                <Link to="/" className="text-xl font-bold text-indigo-600">
-                  QuizApp
-                </Link>
-              </div>
-              <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
+            <div className="flex items-center gap-8">
+              <Link to="/home" className="flex items-center gap-2 font-black text-xl">
+                <span className="text-sky-400">✦</span>
+                <span className="text-white">QuizApp</span>
+              </Link>
+              
+              <div className="hidden sm:flex items-center gap-6">
                 {user?.role === 'candidate' && (
                   <>
-                    <Link
-                      to="/"
-                      className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                    <NavLink
+                      to="/home"
+                      className={({ isActive }) =>
+                        `text-sm font-medium transition-colors duration-200
+                        ${isActive ? "text-sky-400" : "text-white/60 hover:text-white"}`
+                      }
                     >
                       Đề thi
-                    </Link>
-                    <Link
+                    </NavLink>
+                    <NavLink
                       to="/classrooms"
-                      className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                      className={({ isActive }) =>
+                        `text-sm font-medium transition-colors duration-200
+                        ${isActive ? "text-sky-400" : "text-white/60 hover:text-white"}`
+                      }
                     >
                       Lớp học
-                    </Link>
-                    <Link
+                    </NavLink>
+                    <NavLink
                       to="/blog"
-                      className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                      className={({ isActive }) =>
+                        `text-sm font-medium transition-colors duration-200
+                        ${isActive ? "text-sky-400" : "text-white/60 hover:text-white"}`
+                      }
                     >
                       Blog
-                    </Link>
-                    <Link
+                    </NavLink>
+                    <NavLink
                       to="/history"
-                      className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                      className={({ isActive }) =>
+                        `text-sm font-medium transition-colors duration-200
+                        ${isActive ? "text-sky-400" : "text-white/60 hover:text-white"}`
+                      }
                     >
                       Lịch sử
-                    </Link>
+                    </NavLink>
                   </>
                 )}
 
                 {user?.role === 'teacher' && (
                   <>
-                    <Link
+                    <NavLink
                       to="/teacher/classrooms"
-                      className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                      className={({ isActive }) =>
+                        `text-sm font-medium transition-colors duration-200
+                        ${isActive ? "text-sky-400" : "text-white/60 hover:text-white"}`
+                      }
                     >
                       Lớp học
-                    </Link>
-                    <Link
+                    </NavLink>
+                    <NavLink
                       to="/teacher/exams"
-                      className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                      className={({ isActive }) =>
+                        `text-sm font-medium transition-colors duration-200
+                        ${isActive ? "text-sky-400" : "text-white/60 hover:text-white"}`
+                      }
                     >
                       Đề thi
-                    </Link>
-                    <Link
+                    </NavLink>
+                    <NavLink
                       to="/blog"
-                      className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                      className={({ isActive }) =>
+                        `text-sm font-medium transition-colors duration-200
+                        ${isActive ? "text-sky-400" : "text-white/60 hover:text-white"}`
+                      }
                     >
                       Blog
-                    </Link>
+                    </NavLink>
                   </>
                 )}
 
                 {user?.role === 'admin' && (
                   <>
-                    <Link
+                    <NavLink
                       to="/blog"
-                      className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                      className={({ isActive }) =>
+                        `text-sm font-medium transition-colors duration-200
+                        ${isActive ? "text-sky-400" : "text-white/60 hover:text-white"}`
+                      }
                     >
                       Blog
-                    </Link>
+                    </NavLink>
                     <div className="relative flex items-center group">
-                      <button className="border-transparent text-gray-500 group-hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                      <button className="text-white/60 group-hover:text-white inline-flex items-center text-sm font-medium transition-colors">
                         Admin
                         <svg className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                         </svg>
                       </button>
-                      <div className="absolute left-0 mt-32 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 pointer-events-none group-hover:pointer-events-auto">
-                        <div className="py-1" role="menu" aria-orientation="vertical">
+                      <div className="absolute left-0 mt-40 w-48 rounded-xl shadow-xl bg-slate-900 border border-white/10 opacity-0 group-hover:opacity-100 transition-all duration-200 z-10 pointer-events-none group-hover:pointer-events-auto overflow-hidden">
+                        <div className="py-1">
                           <Link
                             to="/admin/exams"
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            role="menuitem"
+                            className="block px-4 py-2 text-sm text-white/70 hover:bg-white/5 hover:text-sky-400"
                           >
                             Quản lý đề thi
                           </Link>
                           <Link
                             to="/admin/blog"
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            role="menuitem"
+                            className="block px-4 py-2 text-sm text-white/70 hover:bg-white/5 hover:text-sky-400"
                           >
                             Quản lý blog
                           </Link>
                           <Link
                             to="/admin/users"
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            role="menuitem"
+                            className="block px-4 py-2 text-sm text-white/70 hover:bg-white/5 hover:text-sky-400"
                           >
                             Quản lý User
                           </Link>
@@ -124,13 +145,17 @@ export default function Layout({ children }: LayoutProps) {
                 )}
               </div>
             </div>
-            <div className="flex items-center">
+            
+            <div className="flex items-center gap-4">
               {user ? (
-                <div className="flex items-center space-x-4">
-                  <span className="text-sm text-gray-700">Chào, {user.name}</span>
+                <div className="flex items-center gap-4">
+                  <span className="text-sm text-white/60">Chào, {user.name}</span>
                   <button
                     onClick={handleLogout}
-                    className="ml-4 inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    className="px-4 py-1.5 rounded-lg text-sm
+                    bg-sky-500/10 border border-sky-500/30 text-sky-400
+                    hover:bg-sky-500 hover:text-white hover:border-sky-500
+                    transition-all duration-200"
                   >
                     Đăng xuất
                   </button>
@@ -138,25 +163,28 @@ export default function Layout({ children }: LayoutProps) {
               ) : (
                 <Link
                   to="/login"
-                  className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="px-4 py-1.5 rounded-lg text-sm
+                  bg-sky-500 text-white font-medium
+                  hover:bg-sky-400 hover:scale-105
+                  transition-all duration-200"
                 >
                   Đăng nhập
                 </Link>
               )}
             </div>
           </div>
-        </nav>
-      </header>
+        </div>
+      </nav>
 
       <main className="flex-grow">
-        <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
           {children}
         </div>
       </main>
 
-      <footer className="bg-white border-t border-gray-200">
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-gray-500 text-sm">
+      <footer className="bg-slate-950 border-t border-white/10">
+        <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+          <p className="text-center text-white/40 text-sm">
             &copy; 2026 Quiz App. All rights reserved.
           </p>
         </div>

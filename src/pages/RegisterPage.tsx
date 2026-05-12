@@ -62,126 +62,163 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Đăng ký tài khoản
-          </h2>
+    <div className="min-h-screen grid lg:grid-cols-2 bg-slate-950">
+      {/* Left panel (gradient bg) - Hidden on mobile */}
+      <div className="hidden lg:flex flex-col justify-center items-center bg-gradient-to-br from-slate-900 via-sky-950 to-slate-900 relative overflow-hidden p-12">
+        {/* Orbs */}
+        <div className="absolute top-20 left-10 w-64 h-64 bg-sky-500/20 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 right-10 w-48 h-48 bg-cyan-500/15 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+
+        {/* Logo */}
+        <div className="relative z-10 text-center">
+          <div className="text-5xl font-black text-white mb-4">
+            ✦{" "}
+            <span className="bg-gradient-to-r from-sky-400 to-cyan-400 bg-clip-text text-transparent">
+              QuizApp
+            </span>
+          </div>
+          <p className="text-white/60 text-lg">
+            Khám phá kiến thức,<br />vươn tới tầm cao mới
+          </p>
+
+          {/* Mini stats */}
+          <div className="flex gap-8 mt-12 justify-center">
+            {[
+              ["500+", "Câu hỏi"],
+              ["50+", "Đề thi"],
+              ["1000+", "Lượt thi"],
+            ].map(([n, l], idx) => (
+              <div key={idx} className="text-center">
+                <div className="text-2xl font-bold text-sky-400">{n}</div>
+                <div className="text-white/40 text-xs mt-1">{l}</div>
+              </div>
+            ))}
+          </div>
         </div>
-        <form className="mt-8 space-y-4" onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-              Họ tên
-            </label>
-            <input
-              id="name"
-              type="text"
-              {...register('name')}
-              className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${
-                errors.name ? 'border-red-500' : 'border-gray-300'
-              } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
-              placeholder="Full name"
-            />
-            {errors.name && (
-              <p className="mt-1 text-xs text-red-500">{errors.name.message}</p>
-            )}
+      </div>
+
+      {/* Right panel (form card) */}
+      <div className="flex flex-col justify-center items-center p-8 lg:p-12 overflow-y-auto">
+        <div className="w-full max-w-md my-8">
+          {/* Mobile logo */}
+          <div className="lg:hidden text-center mb-8">
+            <span className="text-3xl font-black text-white">
+              ✦ <span className="text-sky-400">QuizApp</span>
+            </span>
           </div>
 
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              {...register('email')}
-              className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${
-                errors.email ? 'border-red-500' : 'border-gray-300'
-              } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
-              placeholder="Email address"
-            />
-            {errors.email && (
-              <p className="mt-1 text-xs text-red-500">{errors.email.message}</p>
-            )}
-          </div>
+          <h2 className="text-2xl font-bold text-white mb-2">Đăng ký tài khoản</h2>
+          <p className="text-white/40 mb-8">Bắt đầu hành trình của bạn ngay hôm nay</p>
 
-          <div className="grid grid-cols-2 gap-4">
+          {/* Form */}
+          <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Mật khẩu
+              <label className="block text-sm font-medium text-white/70 mb-2">
+                Họ tên
               </label>
               <input
-                id="password"
-                type="password"
-                {...register('password')}
-                className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${
-                  errors.password ? 'border-red-500' : 'border-gray-300'
-                } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
-                placeholder="Password"
+                type="text"
+                {...register('name')}
+                placeholder="Nguyễn Văn A"
+                className={`w-full px-4 py-3 rounded-xl bg-slate-800 border ${
+                  errors.name ? 'border-red-500' : 'border-white/10'
+                } text-white placeholder-white/20 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all duration-200`}
               />
-              {errors.password && (
-                <p className="mt-1 text-xs text-red-500">{errors.password.message}</p>
+              {errors.name && (
+                <p className="mt-1 text-xs text-red-500">{errors.name.message}</p>
               )}
             </div>
+
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-                Xác nhận mật khẩu
+              <label className="block text-sm font-medium text-white/70 mb-2">
+                Email
               </label>
               <input
-                id="confirmPassword"
-                type="password"
-                {...register('confirmPassword')}
-                className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${
-                  errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
-                } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
-                placeholder="Confirm"
+                type="email"
+                {...register('email')}
+                placeholder="email@example.com"
+                className={`w-full px-4 py-3 rounded-xl bg-slate-800 border ${
+                  errors.email ? 'border-red-500' : 'border-white/10'
+                } text-white placeholder-white/20 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all duration-200`}
               />
-              {errors.confirmPassword && (
-                <p className="mt-1 text-xs text-red-500">{errors.confirmPassword.message}</p>
+              {errors.email && (
+                <p className="mt-1 text-xs text-red-500">{errors.email.message}</p>
               )}
             </div>
-          </div>
 
-          <div>
-            <label htmlFor="role" className="block text-sm font-medium text-gray-700">
-              Vai trò
-            </label>
-            <select
-              id="role"
-              {...register('role')}
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-            >
-              <option value="candidate">Học sinh / Sinh viên</option>
-              <option value="teacher">Giáo viên</option>
-            </select>
-          </div>
-
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded text-sm">
-              {error}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-white/70 mb-2">
+                  Mật khẩu
+                </label>
+                <input
+                  type="password"
+                  {...register('password')}
+                  placeholder="••••••••"
+                  className={`w-full px-4 py-3 rounded-xl bg-slate-800 border ${
+                    errors.password ? 'border-red-500' : 'border-white/10'
+                  } text-white placeholder-white/20 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all duration-200`}
+                />
+                {errors.password && (
+                  <p className="mt-1 text-xs text-red-500">{errors.password.message}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-white/70 mb-2">
+                  Xác nhận
+                </label>
+                <input
+                  type="password"
+                  {...register('confirmPassword')}
+                  placeholder="••••••••"
+                  className={`w-full px-4 py-3 rounded-xl bg-slate-800 border ${
+                    errors.confirmPassword ? 'border-red-500' : 'border-white/10'
+                  } text-white placeholder-white/20 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all duration-200`}
+                />
+                {errors.confirmPassword && (
+                  <p className="mt-1 text-xs text-red-500">{errors.confirmPassword.message}</p>
+                )}
+              </div>
             </div>
-          )}
 
-          <div>
+            <div>
+              <label className="block text-sm font-medium text-white/70 mb-2">
+                Vai trò
+              </label>
+              <select
+                {...register('role')}
+                className="w-full px-4 py-3 rounded-xl bg-slate-800 border border-white/10 text-white focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all duration-200"
+              >
+                <option value="candidate">Học sinh / Sinh viên</option>
+                <option value="teacher">Giáo viên</option>
+              </select>
+            </div>
+
+            {error && (
+              <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+                {error}
+              </div>
+            )}
+
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+              className="w-full py-3 bg-sky-500 hover:bg-sky-400 text-white font-semibold rounded-xl hover:scale-[1.02] hover:shadow-lg hover:shadow-sky-500/30 transition-all duration-300 mt-2 disabled:opacity-50"
             >
-              {loading ? 'Đang đăng ký...' : 'Đăng ký'}
+              {loading ? 'Đang đăng ký...' : 'Đăng ký →'}
             </button>
-          </div>
+          </form>
 
-          <div className="text-center">
+          <p className="text-center text-white/40 text-sm mt-8">
+            Đã có tài khoản?{" "}
             <Link
               to="/login"
-              className="font-medium text-indigo-600 hover:text-indigo-500 text-sm"
+              className="text-sky-400 hover:text-sky-300 font-medium"
             >
-              Đã có tài khoản? Đăng nhập ngay
+              Đăng nhập ngay
             </Link>
-          </div>
-        </form>
+          </p>
+        </div>
       </div>
     </div>
   );

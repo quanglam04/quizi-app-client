@@ -56,7 +56,7 @@ export default function ExamTakePage() {
       } catch (err) {
         console.error('Failed to start exam:', err);
         alert('Không thể bắt đầu bài thi. Vui lòng thử lại.');
-        navigate('/');
+        navigate('/home');
       } finally {
         setLoading(false);
       }
@@ -155,46 +155,47 @@ export default function ExamTakePage() {
     return `${m}:${s < 10 ? '0' : ''}${s}`;
   };
 
-  if (loading) return <div className="text-center py-20">Đang tải đề thi...</div>;
-  if (!exam) return <div className="text-center py-20">Không tìm thấy đề thi.</div>;
+  if (loading) return <div className="text-center py-20 text-white/60">Đang tải đề thi...</div>;
+  if (!exam) return <div className="text-center py-20 text-white/60">Không tìm thấy đề thi.</div>;
 
   const answeredCount = Object.keys(answers).length;
   const totalQuestions = exam.questions.length;
 
   return (
     <div className="flex flex-col h-[calc(100vh-160px)]">
-      {/* Fixed Header */}
-      <div className="bg-white shadow-sm border-b px-6 py-4 flex justify-between items-center sticky top-0 z-20">
-        <div>
-          <h1 className="text-xl font-bold text-gray-900">{exam.title}</h1>
-          <p className="text-sm text-gray-500">Tiến độ: {answeredCount}/{totalQuestions} câu</p>
-        </div>
-        
-        <div className="flex items-center space-x-6">
-          <div className={`text-2xl font-mono font-bold ${timeLeft < 300 ? 'text-red-600 animate-pulse' : 'text-gray-700'}`}>
+      {/* Header cố định */}
+      <div className="sticky top-0 z-10 bg-slate-900/95 backdrop-blur-md border-b border-white/10 px-6 py-4">
+        <div className="flex items-center justify-between max-w-4xl mx-auto">
+          <div>
+            <h1 className="text-white font-bold">{exam.title}</h1>
+            <p className="text-white/40 text-sm">Tiến độ: {answeredCount}/{totalQuestions} câu</p>
+          </div>
+
+          <div className={`font-mono text-2xl font-black ${timeLeft < 300 ? 'text-red-400 animate-pulse' : 'text-sky-400'}`}>
             {formatTime(timeLeft)}
           </div>
+
           <button
             onClick={() => handleSubmit(false)}
             disabled={submitting}
-            className="px-6 py-2 bg-indigo-600 text-white rounded-md font-medium hover:bg-indigo-700 disabled:opacity-50"
+            className="px-5 py-2 bg-sky-500 hover:bg-sky-400 text-white rounded-xl font-semibold hover:scale-105 transition-all disabled:opacity-50"
           >
             {submitting ? 'Đang nộp...' : 'Nộp bài'}
           </button>
         </div>
       </div>
 
-      <div className="flex-grow overflow-y-auto p-6 space-y-8">
+      <div className="flex-grow overflow-y-auto p-6 space-y-8 max-w-4xl mx-auto w-full">
         {exam.questions.sort((a, b) => a.order - b.order).map((q, idx) => (
-          <div key={q.id} id={`question-${q.id}`} className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-            <div className="flex items-start mb-4">
-              <span className="flex-shrink-0 w-8 h-8 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center font-bold mr-3">
+          <div key={q.id} id={`question-${q.id}`} className="bg-slate-900/50 p-6 rounded-2xl border border-white/10 shadow-sm">
+            <div className="flex items-start mb-6">
+              <span className="flex-shrink-0 w-8 h-8 bg-sky-500/10 text-sky-400 border border-sky-500/20 rounded-full flex items-center justify-center font-bold mr-4">
                 {idx + 1}
               </span>
-              <div className="text-lg text-gray-800 font-medium pt-0.5">{q.content}</div>
+              <div className="text-lg text-white font-medium pt-0.5">{q.content}</div>
             </div>
 
-            <div className="ml-11 space-y-3">
+            <div className="ml-12 space-y-3">
               {q.options.sort((a, b) => a.order - b.order).map((opt) => {
                 const isSelected = q.type === 'single' 
                   ? answers[q.id] === opt.id
@@ -203,8 +204,10 @@ export default function ExamTakePage() {
                 return (
                   <label
                     key={opt.id}
-                    className={`flex items-center p-3 border rounded-md cursor-pointer transition-colors ${
-                      isSelected ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:bg-gray-50'
+                    className={`flex items-center p-4 rounded-xl cursor-pointer transition-all duration-200 border ${
+                      isSelected 
+                        ? 'bg-sky-500/15 border-sky-500/50' 
+                        : 'bg-slate-800/50 border-white/10 hover:border-sky-500/50 hover:bg-slate-800'
                     }`}
                   >
                     <input
@@ -212,9 +215,9 @@ export default function ExamTakePage() {
                       name={`question-${q.id}`}
                       checked={isSelected}
                       onChange={() => handleSelectOption(q.id, opt.id, q.type)}
-                      className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300"
+                      className="h-4 w-4 text-sky-500 focus:ring-sky-500 border-white/10 bg-slate-800"
                     />
-                    <span className="ml-3 text-gray-700">{opt.content}</span>
+                    <span className={`ml-3 transition-colors ${isSelected ? 'text-white' : 'text-white/70'}`}>{opt.content}</span>
                   </label>
                 );
               })}
@@ -224,20 +227,24 @@ export default function ExamTakePage() {
       </div>
 
       {/* Progress bar at bottom */}
-      <div className="bg-white border-t p-4 px-6 flex items-center space-x-4">
-        <div className="text-sm font-medium text-gray-700 whitespace-nowrap">Câu hỏi:</div>
-        <div className="flex flex-wrap gap-2">
-          {exam.questions.map((q, idx) => (
-            <button
-              key={q.id}
-              onClick={() => document.getElementById(`question-${q.id}`)?.scrollIntoView({ behavior: 'smooth' })}
-              className={`w-8 h-8 rounded text-xs font-medium border flex items-center justify-center ${
-                answers[q.id] ? 'bg-indigo-600 border-indigo-600 text-white' : 'bg-white border-gray-300 text-gray-600'
-              }`}
-            >
-              {idx + 1}
-            </button>
-          ))}
+      <div className="bg-slate-900/95 backdrop-blur-md border-t border-white/10 p-4 px-6">
+        <div className="max-w-4xl mx-auto flex items-center gap-4 overflow-x-auto">
+          <div className="text-sm font-medium text-white/40 whitespace-nowrap">Câu hỏi:</div>
+          <div className="flex gap-2">
+            {exam.questions.map((q, idx) => (
+              <button
+                key={q.id}
+                onClick={() => document.getElementById(`question-${q.id}`)?.scrollIntoView({ behavior: 'smooth' })}
+                className={`flex-shrink-0 w-8 h-8 rounded-lg text-xs font-medium border transition-all ${
+                  answers[q.id] 
+                    ? 'bg-sky-500 border-sky-500 text-white' 
+                    : 'bg-slate-800 border-white/10 text-white/40 hover:border-sky-500/50'
+                }`}
+              >
+                {idx + 1}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </div>

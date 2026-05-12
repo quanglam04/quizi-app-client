@@ -24,15 +24,18 @@ export default function ExamListPage() {
 
   if (isLoading) {
     return (
-      <div className="space-y-4">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Danh sách đề thi</h1>
+      <div className="space-y-8">
+        <div>
+          <h1 className="text-3xl font-black text-white">Đề thi</h1>
+          <p className="text-white/40 mt-1">Đang tải danh sách đề thi...</p>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 animate-pulse">
-              <div className="h-6 bg-gray-200 rounded w-3/4 mb-4"></div>
-              <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
-              <div className="h-4 bg-gray-200 rounded w-5/6 mb-4"></div>
-              <div className="h-10 bg-gray-200 rounded w-full mt-auto"></div>
+            <div key={i} className="bg-slate-800/50 rounded-2xl border border-white/10 p-6 animate-pulse">
+              <div className="h-6 bg-slate-700 rounded w-3/4 mb-4"></div>
+              <div className="h-4 bg-slate-700 rounded w-full mb-2"></div>
+              <div className="h-4 bg-slate-700 rounded w-5/6 mb-6"></div>
+              <div className="h-10 bg-slate-700 rounded w-full"></div>
             </div>
           ))}
         </div>
@@ -42,45 +45,54 @@ export default function ExamListPage() {
 
   if (error) {
     return (
-      <div className="text-center py-12">
-        <p className="text-red-500">Đã có lỗi xảy ra khi tải danh sách đề thi. Vui lòng thử lại sau.</p>
+      <div className="text-center py-20">
+        <p className="text-red-400">Đã có lỗi xảy ra khi tải danh sách đề thi. Vui lòng thử lại sau.</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Danh sách đề thi</h1>
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-3xl font-black text-white">Đề thi</h1>
+        <p className="text-white/40 mt-1">Chọn đề thi để bắt đầu luyện tập</p>
+      </div>
 
       {exams?.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
-          <p className="text-gray-500 italic">Hiện tại chưa có đề thi nào khả dụng.</p>
+        <div className="bg-slate-800/50 rounded-2xl border border-white/10 p-12 text-center">
+          <p className="text-white/40 italic">Hiện tại chưa có đề thi nào khả dụng.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {exams?.map((exam) => (
             <div
               key={exam.id}
-              className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 flex flex-col hover:shadow-md transition-shadow"
+              className="p-6 rounded-2xl bg-slate-800/50 border border-white/10
+              hover:-translate-y-1 hover:border-sky-500/40 hover:shadow-lg hover:shadow-sky-500/10
+              transition-all duration-300 group flex flex-col"
             >
-              <h2 className="text-xl font-semibold text-gray-800 mb-2 truncate" title={exam.title}>
+              <h3 className="text-white font-semibold text-lg mb-2 group-hover:text-sky-400 transition-colors truncate" title={exam.title}>
                 {exam.title}
-              </h2>
-              <p className="text-gray-600 text-sm mb-4 line-clamp-3 flex-grow">
+              </h3>
+              <p className="text-white/40 text-sm mb-6 line-clamp-3 flex-grow">
                 {exam.description || 'Không có mô tả cho đề thi này.'}
               </p>
-              <div className="flex items-center text-sm text-gray-500 mb-6">
-                <svg className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                {exam.duration} phút
+              
+              <div className="flex items-center justify-between mt-auto">
+                <span className="flex items-center gap-1.5 text-white/40 text-sm">
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  {exam.duration} phút
+                </span>
+                <button
+                  onClick={() => navigate(`/exams/${exam.id}/take`)}
+                  className="px-4 py-2 bg-sky-500 hover:bg-sky-400 text-white text-sm
+                  rounded-lg font-medium hover:scale-105 transition-all duration-200"
+                >
+                  Làm bài →
+                </button>
               </div>
-              <button
-                onClick={() => navigate(`/exams/${exam.id}/take`)}
-                className="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                Bắt đầu làm bài
-              </button>
             </div>
           ))}
         </div>
