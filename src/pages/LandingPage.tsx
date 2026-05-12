@@ -1,119 +1,131 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
+import { useAuthStore } from '../lib/api';
 
 const LandingPage = () => {
-  const scrollToFeatures = () => {
-    document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
+  const { token } = useAuthStore();
+
+  if (token) {
+    return <Navigate to="/home" replace />;
+  }
+
+  const scrollToSection = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white font-sans selection:bg-indigo-500/30">
-      {/* Navbar Landing Page */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800">
+    <div className="min-h-screen bg-slate-950 text-white font-sans selection:bg-sky-500/30 overflow-x-hidden">
+      {/* Navbar */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-white/10 sticky">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center">
-              <span className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-                QuizApp
-              </span>
+            <div className="flex items-center gap-2">
+              <span className="text-sky-400 text-2xl">✦</span>
+              <span className="text-xl font-black tracking-tight text-white">QuizApp</span>
             </div>
-            <div>
+            <div className="hidden md:flex items-center gap-8">
+              <button onClick={() => scrollToSection('features')} className="text-sm font-medium text-white/70 hover:text-sky-400 transition-colors">Tính năng</button>
+              <button onClick={() => scrollToSection('how-it-works')} className="text-sm font-medium text-white/70 hover:text-sky-400 transition-colors">Quy trình</button>
+              <Link to="/blog" className="text-sm font-medium text-white/70 hover:text-sky-400 transition-colors">Blog</Link>
+            </div>
+            <div className="flex items-center gap-4">
+              <Link to="/login" className="text-sm font-medium text-white/70 hover:text-sky-400 transition-colors">Đăng nhập</Link>
               <Link
-                to="/login"
-                className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-full font-medium transition-all hover:shadow-lg hover:shadow-indigo-500/25"
+                to="/register"
+                className="bg-sky-500 hover:bg-sky-400 text-white px-5 py-2 rounded-xl font-bold transition-all hover:scale-105 shadow-lg shadow-sky-500/25 flex items-center gap-2"
               >
-                Đăng nhập
+                Bắt đầu <span className="text-lg">→</span>
               </Link>
             </div>
           </div>
         </div>
       </nav>
 
-      {/* Section 1 - Hero */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-indigo-950 via-slate-900 to-slate-900">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(#4f46e5 0.5px, transparent 0.5px)', backgroundSize: '24px 24px' }}></div>
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col lg:flex-row items-center gap-12">
-          <div className="flex-1 text-center lg:text-left space-y-8 animate-fade-in">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-sm font-medium">
-              <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
-              Nền tảng trắc nghiệm trực tuyến
-            </div>
-            
-            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-tight">
-              Luyện thi <span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">thông minh</span><br />
-              Kết quả vượt trội
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center pt-20 overflow-hidden">
+        {/* Background Effects */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle,_rgba(255,255,255,0.05)_1px,_transparent_1px)] bg-[size:30px_30px]" />
+        <div className="absolute top-20 left-10 w-72 h-72 bg-sky-500/20 rounded-full blur-3xl animate-float" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-sky-600/15 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }} />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid lg:grid-cols-2 gap-12 items-center">
+          <div className="space-y-8 text-center lg:text-left">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-500/10 border border-sky-500/30 text-sky-400 text-sm animate-fade-up">
+              <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" />
+              Nền tảng trắc nghiệm trực tuyến miễn phí
+            </span>
+
+            <h1 className="text-5xl md:text-7xl font-black leading-[1.1] animate-fade-up" style={{ animationDelay: '0.1s' }}>
+              Luyện thi thông minh
+              <br />
+              <span className="bg-gradient-to-r from-sky-400 via-cyan-300 to-sky-500 bg-clip-text text-transparent">
+                Kết quả vượt trội
+              </span>
             </h1>
-            
-            <p className="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto lg:mx-0">
-              Hệ thống trắc nghiệm trực tuyến dành cho sinh viên PTIT — 
-              Làm bài, xem kết quả tức thì, theo dõi tiến độ học tập.
+
+            <p className="text-white/60 text-lg md:text-xl max-w-xl mx-auto lg:mx-0 leading-relaxed animate-fade-up" style={{ animationDelay: '0.2s' }}>
+              Nền tảng trắc nghiệm trực tuyến dành cho học sinh, sinh viên và các tổ chức giáo dục — Làm bài, xem kết quả tức thì, theo dõi tiến độ học tập hiệu quả.
             </p>
-            
-            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 animate-fade-up" style={{ animationDelay: '0.3s' }}>
               <Link
                 to="/login"
-                className="w-full sm:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-lg transition-all hover:scale-105 shadow-xl shadow-indigo-500/20 flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-8 py-4 bg-sky-500 hover:bg-sky-400 text-white rounded-xl font-bold text-lg transition-all hover:scale-105 shadow-xl shadow-sky-500/30 hover:shadow-sky-400/50 flex items-center justify-center gap-2"
               >
-                Bắt đầu làm bài
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
+                Bắt đầu làm bài →
               </Link>
               <button
-                onClick={scrollToFeatures}
-                className="w-full sm:w-auto px-8 py-4 bg-slate-800/50 hover:bg-slate-800 text-white border border-slate-700 rounded-xl font-bold text-lg transition-all"
+                onClick={() => scrollToSection('features')}
+                className="w-full sm:w-auto px-8 py-4 border border-white/20 hover:border-sky-400/50 text-white/80 hover:text-sky-400 rounded-xl font-bold text-lg transition-all hover:bg-sky-500/10 backdrop-blur-sm"
               >
-                Tìm hiểu thêm
+                Tìm hiểu thêm ↓
               </button>
             </div>
           </div>
 
-          <div className="flex-1 w-full max-w-2xl animate-fade-in delay-200">
-            {/* Terminal Mockup */}
-            <div className="bg-slate-800 rounded-2xl border border-slate-700 shadow-2xl overflow-hidden">
-              <div className="bg-slate-900 px-4 py-3 flex items-center justify-between border-b border-slate-700">
-                <div className="flex gap-2">
-                  <div className="w-3 h-3 rounded-full bg-red-500/50"></div>
-                  <div className="w-3 h-3 rounded-full bg-yellow-500/50"></div>
-                  <div className="w-3 h-3 rounded-full bg-green-500/50"></div>
-                </div>
-                <div className="text-xs font-mono text-slate-500">quiz-app-session.sh</div>
-                <div className="w-10"></div>
+          <div className="relative animate-fade-up lg:block hidden" style={{ animationDelay: '0.4s' }}>
+            {/* Quiz Mockup Card */}
+            <div className="animate-float animate-glow rounded-2xl overflow-hidden border border-white/10 bg-slate-800/80 backdrop-blur-xl shadow-2xl shadow-sky-500/20 max-w-md mx-auto">
+              <div className="flex items-center justify-between px-4 py-3 bg-slate-700/50 border-b border-white/10">
+                <span className="text-white/60 text-sm">Câu 3 / 30</span>
+                <span className="text-sky-400 font-mono font-bold">12:45</span>
               </div>
-              <div className="p-6 font-sans">
-                <div className="flex justify-between items-center mb-6 text-sm text-indigo-400 font-mono">
-                  <span>Câu 3/30</span>
-                  <span>12:45</span>
+
+              <div className="p-6">
+                <p className="text-white font-medium mb-6 text-lg">
+                  API Gateway đóng vai trò gì trong microservices?
+                </p>
+                <div className="space-y-3">
+                  {[
+                    "Lưu trữ dữ liệu",
+                    "Điểm vào duy nhất ✓",
+                    "Thực thi logic",
+                    "Quản lý schema",
+                  ].map((opt, i) => (
+                    <div
+                      key={i}
+                      className={`flex items-center gap-3 p-4 rounded-xl text-sm transition-all
+                      ${i === 1 
+                        ? "bg-sky-500/20 border border-sky-500/50 text-sky-300 font-bold" 
+                        : "bg-white/5 border border-white/10 text-white/60 hover:bg-white/10"
+                      }`}
+                    >
+                      <span className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all
+                        ${i === 1 ? "border-sky-400 bg-sky-400" : "border-white/30"}`}>
+                        {i === 1 && <span className="w-2 h-2 rounded-full bg-white" />}
+                      </span>
+                      {opt}
+                    </div>
+                  ))}
                 </div>
-                <div className="space-y-6">
-                  <h3 className="text-lg font-bold text-slate-100">API Gateway đóng vai trò gì?</h3>
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3 p-3 rounded-lg border border-slate-700 hover:bg-slate-700/50 transition-colors cursor-pointer">
-                      <div className="w-5 h-5 rounded-full border-2 border-slate-600"></div>
-                      <span className="text-slate-300">A. Lưu trữ dữ liệu</span>
-                    </div>
-                    <div className="flex items-center gap-3 p-3 rounded-lg border border-indigo-500/50 bg-indigo-500/10 transition-colors cursor-pointer relative overflow-hidden group">
-                      <div className="w-5 h-5 rounded-full border-2 border-indigo-500 flex items-center justify-center">
-                        <div className="w-2.5 h-2.5 rounded-full bg-indigo-500"></div>
-                      </div>
-                      <span className="text-indigo-100 font-medium">B. Điểm vào duy nhất</span>
-                      <span className="ml-auto text-xs text-indigo-400 font-mono">selected</span>
-                    </div>
-                    <div className="flex items-center gap-3 p-3 rounded-lg border border-slate-700 hover:bg-slate-700/50 transition-colors cursor-pointer">
-                      <div className="w-5 h-5 rounded-full border-2 border-slate-600"></div>
-                      <span className="text-slate-300">C. Thực thi logic</span>
-                    </div>
-                    <div className="flex items-center gap-3 p-3 rounded-lg border border-slate-700 hover:bg-slate-700/50 transition-colors cursor-pointer">
-                      <div className="w-5 h-5 rounded-full border-2 border-slate-600"></div>
-                      <span className="text-slate-300">D. Quản lý schema</span>
-                    </div>
-                  </div>
-                  <div className="flex justify-between pt-4">
-                    <div className="px-4 py-2 bg-slate-700 rounded text-sm font-medium text-slate-400">Trước</div>
-                    <div className="px-4 py-2 bg-indigo-600 rounded text-sm font-medium text-white">Tiếp theo</div>
-                  </div>
+                <div className="flex justify-between mt-8">
+                  <button className="px-5 py-2 text-xs bg-white/10 text-white/60 rounded-lg hover:bg-white/20 transition-colors">
+                    ← Trước
+                  </button>
+                  <button className="px-5 py-2 text-xs bg-sky-500 text-white rounded-lg hover:bg-sky-400 transition-all font-bold">
+                    Tiếp →
+                  </button>
                 </div>
               </div>
             </div>
@@ -121,143 +133,158 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Section 2 - Features */}
-      <section id="features" className="py-24 bg-white text-slate-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4">Tại sao chọn QuizApp?</h2>
-          <div className="w-20 h-1 bg-indigo-600 mx-auto rounded-full"></div>
-        </div>
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-3 gap-8">
-          <div className="p-8 rounded-2xl border border-slate-100 bg-slate-50 hover:shadow-xl transition-all hover:-translate-y-1">
-            <div className="w-14 h-14 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-600 mb-6">
-              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-            </div>
-            <h3 className="text-xl font-bold mb-3">Ngân hàng câu hỏi phong phú</h3>
-            <p className="text-slate-600 leading-relaxed">
-              Hàng trăm câu hỏi được biên soạn kỹ lưỡng theo từng chủ đề, cập nhật thường xuyên.
-            </p>
-          </div>
-
-          <div className="p-8 rounded-2xl border border-purple-100 bg-purple-50/30 hover:shadow-xl transition-all hover:-translate-y-1">
-            <div className="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center text-purple-600 mb-6">
-              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-            </div>
-            <h3 className="text-xl font-bold mb-3">Chấm điểm tự động</h3>
-            <p className="text-slate-600 leading-relaxed">
-              Nộp bài xong xem ngay đáp án đúng/sai, giải thích chi tiết từng câu hỏi.
-            </p>
-          </div>
-
-          <div className="p-8 rounded-2xl border border-blue-100 bg-blue-50/30 hover:shadow-xl transition-all hover:-translate-y-1">
-            <div className="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 mb-6">
-              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
-            </div>
-            <h3 className="text-xl font-bold mb-3">Lịch sử làm bài</h3>
-            <p className="text-slate-600 leading-relaxed">
-              Xem lại toàn bộ lịch sử, so sánh điểm số qua các lần thi để biết mình tiến bộ thế nào.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 3 - Stats */}
-      <section className="py-20 bg-indigo-600 text-white">
+      {/* Features Section */}
+      <section id="features" className="py-24 bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div className="space-y-2">
-              <div className="text-4xl md:text-5xl font-black">300+</div>
-              <div className="text-indigo-100 font-medium">Sinh viên</div>
-            </div>
-            <div className="space-y-2">
-              <div className="text-4xl md:text-5xl font-black">10+</div>
-              <div className="text-indigo-100 font-medium">Bộ đề thi</div>
-            </div>
-            <div className="space-y-2">
-              <div className="text-4xl md:text-5xl font-black">500+</div>
-              <div className="text-indigo-100 font-medium">Câu hỏi</div>
-            </div>
-            <div className="space-y-2">
-              <div className="text-4xl md:text-5xl font-black">98%</div>
-              <div className="text-indigo-100 font-medium">Hài lòng</div>
-            </div>
+          <div className="text-center mb-16 space-y-4">
+            <h2 className="text-4xl font-black text-white">
+              Tại sao chọn <span className="text-sky-400">QuizApp</span>?
+            </h2>
+            <p className="text-white/50 max-w-2xl mx-auto">
+              Chúng tôi cung cấp giải pháp luyện tập và đánh giá toàn diện cho mọi nhu cầu giáo dục.
+            </p>
           </div>
-        </div>
-      </section>
 
-      {/* Section 4 - How it works */}
-      <section className="py-24 bg-white text-slate-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">Bắt đầu chỉ trong 3 bước</h2>
-            <div className="w-20 h-1 bg-indigo-600 mx-auto rounded-full"></div>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-12">
+          <div className="grid md:grid-cols-3 gap-8">
             {[
-              { step: '1', title: 'Đăng nhập', desc: 'Dùng mã sinh viên để đăng nhập ngay' },
-              { step: '2', title: 'Chọn đề thi', desc: 'Chọn chủ đề muốn ôn luyện' },
-              { step: '3', title: 'Làm bài & Kết quả', desc: 'Nộp bài, xem đáp án chi tiết tức thì' },
-            ].map((item, idx) => (
-              <div key={idx} className="relative text-center space-y-4">
-                <div className="w-16 h-16 bg-indigo-600 text-white rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto shadow-lg shadow-indigo-200">
-                  {item.step}
+              { icon: '📝', title: 'Ngân hàng câu hỏi', desc: 'Hàng trăm câu hỏi biên soạn kỹ theo từng chủ đề' },
+              { icon: '⚡', title: 'Chấm điểm tức thì', desc: 'Nộp bài xem ngay đáp án, giải thích chi tiết' },
+              { icon: '📊', title: 'Theo dõi tiến độ', desc: 'Lịch sử làm bài, so sánh điểm qua các lần thi' },
+              { icon: '🏫', title: 'Quản lý lớp học', desc: 'Giáo viên tạo lớp, giao đề cho từng nhóm học sinh' },
+              { icon: '🔒', title: 'Bảo mật & ổn định', desc: 'Dữ liệu an toàn, hệ thống hoạt động 24/7' },
+              { icon: '📱', title: 'Mọi thiết bị', desc: 'Làm bài trên điện thoại, máy tính đều mượt mà' },
+            ].map((f, i) => (
+              <div
+                key={i}
+                className="p-8 rounded-2xl bg-slate-800/50 border border-white/10 hover:-translate-y-2 hover:border-sky-500/50 hover:bg-slate-800 hover:shadow-xl hover:shadow-sky-500/10 transition-all duration-300 cursor-default group"
+              >
+                <div className="w-14 h-14 rounded-xl bg-sky-500/20 flex items-center justify-center text-3xl mb-6 group-hover:bg-sky-500/30 group-hover:scale-110 transition-all">
+                  {f.icon}
                 </div>
-                <h3 className="text-xl font-bold">{item.title}</h3>
-                <p className="text-slate-500">{item.desc}</p>
+                <h3 className="text-xl font-bold text-white mb-3 group-hover:text-sky-400 transition-colors">
+                  {f.title}
+                </h3>
+                <p className="text-white/50 leading-relaxed">
+                  {f.desc}
+                </p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Section 5 - Final CTA */}
-      <section className="py-24 relative overflow-hidden bg-slate-900">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-indigo-500/20 via-transparent to-transparent"></div>
+      {/* Stats Section */}
+      <section className="py-20 bg-gradient-to-r from-sky-600 to-cyan-500 overflow-hidden relative">
+        <div className="absolute top-0 left-0 w-full h-full opacity-10" style={{ backgroundImage: 'radial-gradient(white 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {[
+              { number: "500+", label: "Câu hỏi" },
+              { number: "50+", label: "Bộ đề thi" },
+              { number: "1000+", label: "Lượt làm bài" },
+              { number: "100%", label: "Miễn phí" },
+            ].map((s, i) => (
+              <div key={i} className="text-center group">
+                <div className="text-5xl font-black text-white mb-2 group-hover:scale-110 transition-transform duration-300">
+                  {s.number}
+                </div>
+                <div className="text-sky-100 text-sm font-bold uppercase tracking-widest">{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How it works Section */}
+      <section id="how-it-works" className="py-24 bg-slate-950 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-20 space-y-4">
+            <h2 className="text-4xl font-black text-white">Bắt đầu chỉ trong <span className="text-sky-400">3 bước</span></h2>
+            <p className="text-white/50">Đơn giản, nhanh chóng và hiệu quả.</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-16 relative">
+            {/* Connecting Lines (Desktop) */}
+            <div className="absolute top-8 left-1/4 right-1/4 h-0.5 bg-sky-500/20 hidden md:block"></div>
+            
+            {[
+              { step: '1', title: 'Đăng nhập', desc: 'Tạo tài khoản miễn phí hoặc đăng nhập với mã được cấp' },
+              { step: '2', title: 'Chọn đề thi', desc: 'Browse đề theo chủ đề, lớp học hoặc do giáo viên giao' },
+              { step: '3', title: 'Làm bài & Kết quả', desc: 'Nộp bài xem điểm, đáp án và giải thích chi tiết' },
+            ].map((item, idx) => (
+              <div key={idx} className="relative flex flex-col items-center text-center group z-10">
+                <div className="w-20 h-20 rounded-2xl bg-sky-500/20 border-2 border-sky-500/50 flex items-center justify-center text-sky-400 font-black text-2xl mb-6 group-hover:bg-sky-500 group-hover:border-sky-400 group-hover:text-white group-hover:scale-110 transition-all duration-300 shadow-lg shadow-sky-500/10">
+                  {item.step}
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-3">{item.title}</h3>
+                <p className="text-white/50 leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* For who Section */}
+      <section className="py-24 bg-slate-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-black text-white">Dành cho tất cả mọi người</h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { icon: '👨‍🎓', title: 'Học sinh / Sinh viên', desc: 'Ôn luyện kiến thức, chuẩn bị cho kỳ thi với hàng trăm câu hỏi đa dạng.' },
+              { icon: '👨‍🏫', title: 'Giáo viên / Giảng viên', desc: 'Tạo lớp học, biên soạn đề thi, theo dõi kết quả của từng học sinh dễ dàng.' },
+              { icon: '🏢', title: 'Tổ chức / Doanh nghiệp', desc: 'Tổ chức kiểm tra nội bộ, đánh giá năng lực nhân viên hoặc ứng viên hiệu quả.' },
+            ].map((p, i) => (
+              <div key={i} className="p-8 rounded-3xl relative bg-gradient-to-br from-slate-800 to-slate-900 border border-white/10 hover:border-sky-500/50 hover:-translate-y-2 hover:shadow-xl hover:shadow-sky-500/10 transition-all duration-300">
+                <div className="text-4xl mb-6">{p.icon}</div>
+                <h3 className="text-xl font-bold text-white mb-3">{p.title}</h3>
+                <p className="text-white/50 leading-relaxed">{p.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA Section */}
+      <section className="py-24 relative overflow-hidden bg-gradient-to-br from-sky-600 via-sky-500 to-cyan-500">
+        <div className="absolute top-0 left-1/4 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-float" />
+        <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-cyan-300/20 rounded-full blur-3xl animate-float" style={{ animationDelay: '1.5s' }} />
+
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">Sẵn sàng bắt đầu chưa?</h2>
-          <p className="text-slate-400 text-xl mb-10">Đăng nhập ngay để truy cập toàn bộ đề thi.</p>
+          <h2 className="text-4xl md:text-6xl font-black text-white mb-6">Sẵn sàng bắt đầu chưa?</h2>
+          <p className="text-sky-100 text-xl mb-10">Tham gia cùng hàng ngàn người dùng ngay hôm nay — hoàn toàn miễn phí.</p>
           <Link
-            to="/login"
-            className="inline-flex items-center gap-2 px-10 py-5 bg-white text-indigo-600 hover:bg-slate-100 rounded-2xl font-bold text-xl transition-all hover:scale-105 shadow-2xl"
+            to="/register"
+            className="inline-flex items-center gap-2 px-10 py-5 bg-white text-sky-600 rounded-2xl font-bold text-xl transition-all hover:scale-105 shadow-2xl hover:shadow-white/20"
           >
-            Đăng nhập ngay
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
+            Đăng ký miễn phí →
           </Link>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-12 bg-slate-900 border-t border-slate-800 text-slate-500">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div>© 2025 QuizApp — PTIT</div>
-          <div className="flex gap-8">
-            <a href="#" className="hover:text-white transition-colors">Liên hệ</a>
-            <a href="#" className="hover:text-white transition-colors">Điều khoản</a>
+      <footer className="bg-slate-950 border-t border-white/10 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-8 text-center md:text-left">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 justify-center md:justify-start">
+                <span className="text-sky-400 text-2xl">✦</span>
+                <span className="text-xl font-black tracking-tight text-white">QuizApp</span>
+              </div>
+              <p className="text-white/40 text-sm">© 2025 QuizApp. All rights reserved.</p>
+            </div>
+            <div className="flex flex-wrap justify-center gap-8 text-white/40 text-sm font-medium">
+              <a href="#" className="hover:text-sky-400 transition-colors">Tính năng</a>
+              <a href="#" className="hover:text-sky-400 transition-colors">Blog</a>
+              <a href="#" className="hover:text-sky-400 transition-colors">Liên hệ</a>
+              <a href="#" className="hover:text-sky-400 transition-colors">Điều khoản</a>
+              <a href="#" className="hover:text-sky-400 transition-colors">Chính sách</a>
+            </div>
           </div>
         </div>
       </footer>
-
-      <style>{`
-        @keyframes fade-in {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in {
-          animation: fade-in 0.8s ease-out forwards;
-        }
-        .delay-200 {
-          animation-delay: 0.2s;
-        }
-      `}</style>
     </div>
   );
 };
