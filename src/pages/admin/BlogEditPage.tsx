@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import ReactMarkdown from 'react-markdown';
+import toast from "react-hot-toast";
 import { api } from '../../lib/api';
 
 interface BlogFormData {
@@ -82,18 +83,18 @@ export default function AdminBlogEdit() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-blog-posts'] });
-      alert('Đã lưu bài viết thành công!');
+      toast.success('Đã lưu bài viết!');
       navigate('/admin/blog');
     },
     onError: (err: any) => {
-      alert(err.response?.data?.message || 'Có lỗi xảy ra khi lưu bài viết.');
+      toast.error(err.response?.data?.message || 'Có lỗi xảy ra khi lưu bài viết.');
     },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.title.trim() || !formData.slug.trim() || !formData.content.trim()) {
-      alert('Vui lòng nhập đầy đủ Tiêu đề, Slug và Nội dung.');
+      toast.error('Vui lòng nhập đầy đủ Tiêu đề, Slug và Nội dung.');
       return;
     }
     saveMutation.mutate(formData);

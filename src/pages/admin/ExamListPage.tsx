@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import { api } from "../../lib/api";
 
 interface Exam {
@@ -51,9 +52,36 @@ export default function AdminExamList() {
   });
 
   const handleDelete = (id: string, title: string) => {
-    if (window.confirm(`Bạn có chắc chắn muốn xóa đề thi "${title}"?`)) {
-      deleteMutation.mutate(id);
-    }
+    toast(
+      (t) => (
+        <div className="flex items-center gap-3">
+          <span className="text-white/80">Xóa "{title}"?</span>
+          <div className="flex gap-2">
+            <button
+              onClick={() => { deleteMutation.mutate(id); toast.dismiss(t.id); }}
+              className="px-3 py-1 bg-red-500 hover:bg-red-400 text-white text-xs rounded-lg transition-colors"
+            >
+              Xóa
+            </button>
+            <button
+              onClick={() => toast.dismiss(t.id)}
+              className="px-3 py-1 bg-slate-600 hover:bg-slate-500 text-white/70 text-xs rounded-lg transition-colors"
+            >
+              Hủy
+            </button>
+          </div>
+        </div>
+      ),
+      {
+        duration: 5000,
+        style: {
+          background: "#1e293b",
+          border: "1px solid rgba(248,113,113,0.3)",
+          borderRadius: "12px",
+          padding: "12px 16px",
+        },
+      },
+    );
   };
 
   const handleToggle = (id: string, currentStatus: boolean) => {

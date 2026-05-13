@@ -249,9 +249,29 @@ const ClassroomDetailPage = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <button
                             onClick={() => {
-                              if (window.confirm(`Xóa học sinh ${member.name} khỏi lớp?`)) {
-                                kickMemberMutation.mutate(member.userId);
-                              }
+                              const userId = member.userId;
+                              toast(
+                                (t) => (
+                                  <div className="flex items-center gap-3">
+                                    <span className="text-white/80">Kick "{member.name}"?</span>
+                                    <div className="flex gap-2">
+                                      <button
+                                        onClick={() => { kickMemberMutation.mutate(userId); toast.dismiss(t.id); }}
+                                        className="px-3 py-1 bg-red-500 hover:bg-red-400 text-white text-xs rounded-lg transition-colors"
+                                      >
+                                        Kick
+                                      </button>
+                                      <button
+                                        onClick={() => toast.dismiss(t.id)}
+                                        className="px-3 py-1 bg-slate-600 hover:bg-slate-500 text-white/70 text-xs rounded-lg transition-colors"
+                                      >
+                                        Hủy
+                                      </button>
+                                    </div>
+                                  </div>
+                                ),
+                                { duration: 5000, style: { background: "#1e293b", border: "1px solid rgba(248,113,113,0.3)", borderRadius: "12px", padding: "12px 16px" } },
+                              );
                             }}
                             className="text-red-400 hover:text-red-300 transition-colors"
                           >
@@ -340,9 +360,29 @@ const ClassroomDetailPage = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <button
                             onClick={() => {
-                              if (window.confirm(`Ngừng giao đề "${exam.examTitle}" cho lớp này?`)) {
-                                unassignExamMutation.mutate(exam.examId);
-                              }
+                              const examId = exam.examId;
+                              toast(
+                                (t) => (
+                                  <div className="flex items-center gap-3">
+                                    <span className="text-white/80">Bỏ giao "{exam.examTitle}"?</span>
+                                    <div className="flex gap-2">
+                                      <button
+                                        onClick={() => { unassignExamMutation.mutate(examId); toast.dismiss(t.id); }}
+                                        className="px-3 py-1 bg-red-500 hover:bg-red-400 text-white text-xs rounded-lg transition-colors"
+                                      >
+                                        Bỏ giao
+                                      </button>
+                                      <button
+                                        onClick={() => toast.dismiss(t.id)}
+                                        className="px-3 py-1 bg-slate-600 hover:bg-slate-500 text-white/70 text-xs rounded-lg transition-colors"
+                                      >
+                                        Hủy
+                                      </button>
+                                    </div>
+                                  </div>
+                                ),
+                                { duration: 5000, style: { background: "#1e293b", border: "1px solid rgba(248,113,113,0.3)", borderRadius: "12px", padding: "12px 16px" } },
+                              );
                             }}
                             className="text-red-400 hover:text-red-300 transition-colors"
                           >

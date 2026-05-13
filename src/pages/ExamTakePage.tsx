@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { api } from '../lib/api';
 
 interface Option {
@@ -55,7 +56,7 @@ export default function ExamTakePage() {
         setTimeLeft(examData.duration * 60);
       } catch (err) {
         console.error('Failed to start exam:', err);
-        alert('Không thể bắt đầu bài thi. Vui lòng thử lại.');
+        toast.error('Không thể bắt đầu bài thi. Vui lòng thử lại.');
         navigate('/home');
       } finally {
         setLoading(false);
@@ -111,23 +112,17 @@ export default function ExamTakePage() {
     }
   };
 
-  const handleSubmit = async (isAuto = false) => {
-    if (!isAuto && !window.confirm('Bạn có chắc chắn muốn nộp bài?')) return;
-    
+  const performSubmit = async () => {
     setSubmitting(true);
     if (timerRef.current) clearInterval(timerRef.current);
 
     try {
-      // Format answers theo yêu cầu API
       const formattedAnswers: { questionId: string; optionId: string | null }[] = [];
-      
+
       exam?.questions.forEach((q) => {
         const ans = answers[q.id];
         if (q.type === 'single') {
-          formattedAnswers.push({
-            questionId: q.id,
-            optionId: (ans as string) || null
-          });
+          formattedAnswers.push({ questionId: q.id, optionId: (ans as string) || null });
         } else {
           const selectedOptions = (ans as string[]) || [];
           if (selectedOptions.length === 0) {
@@ -144,9 +139,46 @@ export default function ExamTakePage() {
       navigate(`/sessions/${sessionId}/result`, { replace: true });
     } catch (err) {
       console.error('Submit failed:', err);
-      alert('Nộp bài thất bại. Vui lòng thử lại.');
+      toast.error('Nộp bài thất bại. Vui lòng thử lại.');
       setSubmitting(false);
     }
+  };
+
+  const handleSubmit = (isAuto = false) => {
+    if (isAuto) {
+      performSubmit();
+      return;
+    }
+    toast(
+      (t) => (
+        <div className="flex items-center gap-3">
+          <span className="text-white/80">Nộp bài ngay?</span>
+          <div className="flex gap-2">
+            <button
+              onClick={() => { performSubmit(); toast.dismiss(t.id); }}
+              className="px-3 py-1 bg-sky-500 hover:bg-sky-400 text-white text-xs rounded-lg transition-colors"
+            >
+              Nộp bài
+            </button>
+            <button
+              onClick={() => toast.dismiss(t.id)}
+              className="px-3 py-1 bg-slate-600 hover:bg-slate-500 text-white/70 text-xs rounded-lg transition-colors"
+            >
+              Hủy
+            </button>
+          </div>
+        </div>
+      ),
+      {
+        duration: 5000,
+        style: {
+          background: "#1e293b",
+          border: "1px solid rgba(56,189,248,0.3)",
+          borderRadius: "12px",
+          padding: "12px 16px",
+        },
+      },
+    );
   };
 
   const formatTime = (seconds: number) => {

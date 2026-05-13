@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import * as XLSX from "xlsx";
+import toast from "react-hot-toast";
 import { api } from "../../lib/api";
 
 const examSchema = z.object({
@@ -97,10 +98,10 @@ export default function TeacherExamEdit() {
       if (isNew) {
         navigate(`/teacher/exams/${data.id}`, { replace: true });
       }
-      alert("Đã lưu đề thi thành công!");
+      toast.success("Đã lưu đề thi!");
     },
     onError: (err: any) => {
-      alert(err.response?.data?.message || "Có lỗi xảy ra khi lưu đề thi.");
+      toast.error(err.response?.data?.message || "Có lỗi xảy ra khi lưu đề thi.");
     },
   });
 
@@ -115,7 +116,7 @@ export default function TeacherExamEdit() {
       setShowQuestionForm(false);
     },
     onError: (err: any) => {
-      alert(err.response?.data?.message || "Thêm câu hỏi thất bại");
+      toast.error(err.response?.data?.message || "Thêm câu hỏi thất bại");
     },
   });
 
@@ -138,10 +139,10 @@ export default function TeacherExamEdit() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["teacher-exams", id] });
-      alert("Đã import câu hỏi thành công!");
+      toast.success("Import thành công!");
     },
     onError: (err: any) => {
-      alert(err.response?.data?.error || "Import thất bại");
+      toast.error(err.response?.data?.error || "Import thất bại");
     },
   });
 
@@ -154,7 +155,7 @@ export default function TeacherExamEdit() {
       queryClient.invalidateQueries({ queryKey: ["teacher-exams", id] });
     },
     onError: (err: any) => {
-      alert(err.response?.data?.message || "Xóa câu hỏi thất bại");
+      toast.error(err.response?.data?.message || "Xóa câu hỏi thất bại");
     },
   });
 
@@ -164,14 +165,12 @@ export default function TeacherExamEdit() {
 
   const handleAddQuestion = (newQuestion: Question) => {
     if (isNew) {
-      alert("Vui lòng lưu đề thi trước khi thêm câu hỏi.");
+      toast("Lưu đề thi trước khi thêm câu hỏi", { icon: "⚠️" });
       return;
     }
 
     if (editingQuestionIdx !== null) {
-      alert(
-        "Tính năng sửa câu hỏi đang được cập nhật. Vui lòng xóa và thêm lại.",
-      );
+      toast("Tính năng sửa câu hỏi đang được cập nhật. Vui lòng xóa và thêm lại.", { icon: "⚠️" });
     } else {
       addQuestionMutation.mutate({
         ...newQuestion,
@@ -183,13 +182,40 @@ export default function TeacherExamEdit() {
   const removeQuestion = (idx: number) => {
     const question = questions[idx];
     if (!question.id) {
-      alert("Câu hỏi chưa được lưu trên hệ thống.");
+      toast.error("Câu hỏi chưa được lưu trên hệ thống.");
       return;
     }
-
-    if (window.confirm("Bạn có chắc chắn muốn xóa câu hỏi này khỏi đề thi?")) {
-      deleteQuestionMutation.mutate(question.id);
-    }
+    const questionId = question.id;
+    toast(
+      (t) => (
+        <div className="flex items-center gap-3">
+          <span className="text-white/80">Xóa câu hỏi này?</span>
+          <div className="flex gap-2">
+            <button
+              onClick={() => { deleteQuestionMutation.mutate(questionId); toast.dismiss(t.id); }}
+              className="px-3 py-1 bg-red-500 hover:bg-red-400 text-white text-xs rounded-lg transition-colors"
+            >
+              Xóa
+            </button>
+            <button
+              onClick={() => toast.dismiss(t.id)}
+              className="px-3 py-1 bg-slate-600 hover:bg-slate-500 text-white/70 text-xs rounded-lg transition-colors"
+            >
+              Hủy
+            </button>
+          </div>
+        </div>
+      ),
+      {
+        duration: 5000,
+        style: {
+          background: "#1e293b",
+          border: "1px solid rgba(248,113,113,0.3)",
+          borderRadius: "12px",
+          padding: "12px 16px",
+        },
+      },
+    );
   };
 
   const downloadTemplate = () => {
@@ -212,7 +238,7 @@ export default function TeacherExamEdit() {
 
   const handleImportExcel = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (isNew) {
-      alert("Vui lòng lưu đề thi trước khi import câu hỏi.");
+      toast("Lưu đề thi trước khi import câu hỏi", { icon: "⚠️" });
       return;
     }
 
@@ -259,13 +285,8 @@ export default function TeacherExamEdit() {
         };
       });
 
-      if (
-        window.confirm(
-          `Tìm thấy ${importedQuestions.length} câu hỏi. Bạn có muốn import ngay?`,
-        )
-      ) {
-        bulkImportMutation.mutate(importedQuestions);
-      }
+      toast.success(`Tìm thấy ${importedQuestions.length} câu, đang import...`);
+      bulkImportMutation.mutate(importedQuestions);
       e.target.value = "";
     };
     reader.readAsBinaryString(file);
@@ -537,11 +558,9 @@ function QuestionFormModal({
   };
 
   const handleSave = () => {
-    if (!content.trim()) return alert("Nội dung câu hỏi không được rỗng");
-    if (options.some((o) => !o.content.trim()))
-      return alert("Vui lòng nhập đầy đủ các lựa chọn");
-    if (!options.some((o) => o.isCorrect))
-      return alert("Phải có ít nhất 1 đáp án đúng");
+    if (!content.trim()) { toast.error("Nhập nội dung câu hỏi"); return; }
+    if (options.some((o) => !o.content.trim())) { toast.error("Vui lòng nhập đầy đủ các lựa chọn"); return; }
+    if (!options.some((o) => o.isCorrect)) { toast.error("Chọn ít nhất 1 đáp án đúng"); return; }
 
     onSubmit({
       content,
