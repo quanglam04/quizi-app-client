@@ -73,7 +73,10 @@ function getInitialState(): { user: User | null; token: string | null } {
       id: decoded.id,
       email: decoded.email,
       role: decoded.role,
-      name: decoded.name || decoded.email, // JWT không lưu name, dùng email tạm
+      name:
+        decoded.name || // từ JWT mới
+        localStorage.getItem("user_name") || // từ localStorage
+        decoded.email, // fallback cuối
     },
   };
 }
@@ -83,11 +86,13 @@ export const useAuthStore = create<AuthStore>((set) => ({
 
   login: (user, token) => {
     localStorage.setItem("token", token);
+    localStorage.setItem("user_name", user.name); // lưu thêm name
     set({ user, token });
   },
 
   logout: () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user_name"); // xóa khi logout
     set({ user: null, token: null });
   },
 }));
