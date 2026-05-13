@@ -56,3 +56,13 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #475569;
 }
+
+/* Bỏ highlight bôi đen trong code block */
+.prose pre {
+  background-color: #1e293b !important;
+}
+
+.prose pre code {
+  color: #e2e8f0 !important;
+  background: none !important;
+}
