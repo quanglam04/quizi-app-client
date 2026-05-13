@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../../lib/api';
 import toast from 'react-hot-toast';
+import { SkeletonCard } from '../../components/Skeleton';
 import { Link } from 'react-router-dom';
 
 interface Classroom {
@@ -121,7 +122,11 @@ const ClassroomListPage = () => {
       </div>
 
       {isLoading ? (
-        <div className="text-center py-12 text-white/40">Đang tải danh sách lớp...</div>
+        <div className="p-6 space-y-3">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <SkeletonCard key={i} />
+          ))}
+        </div>
       ) : classrooms?.length === 0 ? (
         <div className="bg-slate-900 rounded-2xl border-2 border-dashed border-white/10 py-16 text-center">
           <p className="text-white/40 mb-4">Bạn chưa có lớp học nào.</p>

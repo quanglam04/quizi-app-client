@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../lib/api';
+import { SkeletonCard } from '../components/Skeleton';
 
 interface Exam {
   id: string;
@@ -24,21 +25,10 @@ export default function ExamListPage() {
 
   if (isLoading) {
     return (
-      <div className="space-y-8">
-        <div>
-          <h1 className="text-3xl font-black text-white">Đề thi</h1>
-          <p className="text-white/40 mt-1">Đang tải danh sách đề thi...</p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-slate-800/50 rounded-2xl border border-white/10 p-6 animate-pulse">
-              <div className="h-6 bg-slate-700 rounded w-3/4 mb-4"></div>
-              <div className="h-4 bg-slate-700 rounded w-full mb-2"></div>
-              <div className="h-4 bg-slate-700 rounded w-5/6 mb-6"></div>
-              <div className="h-10 bg-slate-700 rounded w-full"></div>
-            </div>
-          ))}
-        </div>
+      <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <SkeletonCard key={i} />
+        ))}
       </div>
     );
   }

@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { api } from '../../lib/api';
+import { SkeletonTable } from '../../components/Skeleton';
 
 interface BlogPost {
   id: string;
@@ -84,7 +85,12 @@ export default function AdminBlogList() {
     toggleMutation.mutate({ id, isPublished: !currentStatus });
   };
 
-  if (isLoading) return <div className="text-center py-20 text-white/60">Đang tải danh sách bài viết...</div>;
+  if (isLoading)
+    return (
+      <div className="p-6">
+        <SkeletonTable rows={8} />
+      </div>
+    );
   if (error) return <div className="text-center py-20 text-red-500">Đã có lỗi xảy ra.</div>;
 
   return (

@@ -290,7 +290,18 @@ export default function AdminExamEdit() {
   };
 
   if (isLoading)
-    return <div className="text-center py-20 text-white/60">Đang tải dữ liệu...</div>;
+    return (
+      <div className="p-6 space-y-6">
+        <div className="bg-slate-900 rounded-2xl border border-white/10 p-6 animate-pulse">
+          <div className="h-5 bg-slate-700 rounded w-40 mb-6" />
+          <div className="space-y-4">
+            <div className="h-12 bg-slate-800 rounded-xl" />
+            <div className="h-24 bg-slate-800 rounded-xl" />
+            <div className="h-12 bg-slate-800 rounded-xl" />
+          </div>
+        </div>
+      </div>
+    );
 
   return (
     <div className="max-w-5xl mx-auto space-y-10 pb-20">

@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { api } from '../lib/api';
+import { SkeletonCard } from '../components/Skeleton';
 
 interface BlogPost {
   id: string;
@@ -21,21 +22,10 @@ export default function BlogListPage() {
 
   if (isLoading) {
     return (
-      <div className="space-y-8 max-w-4xl mx-auto">
-        <div>
-          <h1 className="text-3xl font-black text-white">Blog ôn luyện</h1>
-          <p className="text-white/40 mt-1">Đang tải các bài viết kiến thức...</p>
-        </div>
-        <div className="grid grid-cols-1 gap-6">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-slate-800/50 p-6 rounded-2xl border border-white/10 animate-pulse">
-              <div className="h-6 bg-slate-700 rounded w-1/2 mb-4"></div>
-              <div className="h-4 bg-slate-700 rounded w-full mb-2"></div>
-              <div className="h-4 bg-slate-700 rounded w-3/4 mb-6"></div>
-              <div className="h-4 bg-slate-700 rounded w-24"></div>
-            </div>
-          ))}
-        </div>
+      <div className="p-6 space-y-4 max-w-4xl mx-auto">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <SkeletonCard key={i} />
+        ))}
       </div>
     );
   }

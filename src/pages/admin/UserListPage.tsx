@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../../lib/api';
+import { SkeletonTable } from '../../components/Skeleton';
 
 interface User {
   id: string;
@@ -20,19 +21,8 @@ export default function AdminUserList() {
 
   if (isLoading) {
     return (
-      <div className="space-y-8">
-        <div>
-          <h1 className="text-3xl font-black text-white">Quản lý User</h1>
-          <p className="text-white/40 mt-1">Đang tải danh sách người dùng...</p>
-        </div>
-        <div className="bg-slate-900 rounded-2xl border border-white/10 overflow-hidden">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="px-6 py-5 animate-pulse border-b border-white/5 last:border-0">
-              <div className="h-5 bg-slate-800 rounded w-1/4 mb-3"></div>
-              <div className="h-4 bg-slate-800/50 rounded w-1/2"></div>
-            </div>
-          ))}
-        </div>
+      <div className="p-6">
+        <SkeletonTable rows={8} />
       </div>
     );
   }

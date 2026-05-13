@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { api } from "../lib/api";
+import { SkeletonText } from "../components/Skeleton";
 
 interface BlogPost {
   id: string;
@@ -33,8 +34,10 @@ export default function BlogPostPage() {
 
   if (isLoading)
     return (
-      <div className="text-center py-20 text-white/60">
-        Đang tải bài viết...
+      <div className="max-w-3xl mx-auto p-6">
+        <div className="h-8 bg-slate-700 rounded w-3/4 mb-4 animate-pulse" />
+        <div className="h-4 bg-slate-700/50 rounded w-32 mb-8 animate-pulse" />
+        <SkeletonText lines={8} />
       </div>
     );
   if (error || !post) {

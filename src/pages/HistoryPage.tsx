@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { api, useAuthStore } from "../lib/api";
+import { SkeletonTable } from "../components/Skeleton";
 
 interface Session {
   sessionId: string;
@@ -38,7 +39,11 @@ export default function HistoryPage() {
   });
 
   if (isLoading)
-    return <div className="text-center py-20 text-white/60">Đang tải lịch sử...</div>;
+    return (
+      <div className="p-6">
+        <SkeletonTable rows={8} />
+      </div>
+    );
   if (error)
     return (
       <div className="text-center py-20 text-red-400">

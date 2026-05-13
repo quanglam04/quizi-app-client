@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { api } from "../../lib/api";
+import { SkeletonTable } from "../../components/Skeleton";
 
 interface Exam {
   id: string;
@@ -91,7 +92,9 @@ export default function TeacherExamList() {
 
   if (isLoading)
     return (
-      <div className="text-center py-20 text-white/60">Đang tải danh sách đề thi...</div>
+      <div className="p-6">
+        <SkeletonTable rows={6} />
+      </div>
     );
   if (error)
     return (

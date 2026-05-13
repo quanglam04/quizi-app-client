@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../../lib/api';
 import { toast } from 'react-hot-toast';
+import { SkeletonTable } from '../../components/Skeleton';
 
 interface Member {
   id: string;
@@ -118,7 +119,7 @@ const ClassroomDetailPage = () => {
     },
   });
 
-  if (isLoadingClassroom) return <div className="p-8 text-center text-white/40">Đang tải chi tiết lớp học...</div>;
+  if (isLoadingClassroom) return <div className="p-6"><SkeletonTable rows={5} /></div>;
   if (!classroom) return <div className="p-8 text-center text-red-400">Không tìm thấy lớp học</div>;
 
   const pendingMembers = classroom.members.filter(m => m.status === 'pending');
