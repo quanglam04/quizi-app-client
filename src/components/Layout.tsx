@@ -98,6 +98,15 @@ export default function Layout({ children }: LayoutProps) {
                     >
                       Blog
                     </NavLink>
+                    <NavLink
+                      to="/history"
+                      className={({ isActive }) =>
+                        `text-sm font-medium transition-colors duration-200
+                        ${isActive ? "text-sky-400" : "text-white/60 hover:text-white"}`
+                      }
+                    >
+                      Lịch sử thi
+                    </NavLink>
                   </>
                 )}
 
