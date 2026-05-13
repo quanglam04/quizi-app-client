@@ -1,7 +1,7 @@
-import { useEffect, useState, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
-import { api } from '../lib/api';
+import { useEffect, useState, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { api } from "../lib/api";
 
 interface Option {
   id: string;
@@ -12,7 +12,7 @@ interface Option {
 interface Question {
   id: string;
   content: string;
-  type: 'single' | 'multiple';
+  type: "single" | "multiple";
   order: number;
   options: Option[];
 }
@@ -42,7 +42,7 @@ export default function ExamTakePage() {
     const initExam = async () => {
       try {
         setLoading(true);
-        const sessionRes = await api.post('/sessions/start', { examId });
+        const sessionRes = await api.post("/sessions/start", { examId });
         const sId = sessionRes.data.id;
         setSessionId(sId);
 
@@ -51,9 +51,9 @@ export default function ExamTakePage() {
         setExam(examData);
         setTimeLeft(examData.duration * 60);
       } catch (err) {
-        console.error('Failed to start exam:', err);
-        toast.error('Không thể bắt đầu bài thi. Vui lòng thử lại.');
-        navigate('/home');
+        console.error("Failed to start exam:", err);
+        toast.error("Không thể bắt đầu bài thi. Vui lòng thử lại.");
+        navigate("/home");
       } finally {
         setLoading(false);
       }
@@ -87,15 +87,34 @@ export default function ExamTakePage() {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (!submitting) {
         e.preventDefault();
-        e.returnValue = '';
+        e.returnValue = "";
       }
     };
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [submitting]);
 
-  const handleSelectOption = (questionId: string, optionId: string, type: 'single' | 'multiple') => {
-    if (type === 'single') {
+  useEffect(() => {
+    // Mở fullscreen
+    const el = document.documentElement;
+    if (el.requestFullscreen) {
+      el.requestFullscreen().catch(() => {});
+    }
+
+    // Thoát fullscreen khi rời trang
+    return () => {
+      if (document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+      }
+    };
+  }, []);
+
+  const handleSelectOption = (
+    questionId: string,
+    optionId: string,
+    type: "single" | "multiple",
+  ) => {
+    if (type === "single") {
       setAnswers((prev) => ({ ...prev, [questionId]: optionId }));
     } else {
       setAnswers((prev) => {
@@ -113,12 +132,18 @@ export default function ExamTakePage() {
     if (timerRef.current) clearInterval(timerRef.current);
 
     try {
-      const formattedAnswers: { questionId: string; optionId: string | null }[] = [];
+      const formattedAnswers: {
+        questionId: string;
+        optionId: string | null;
+      }[] = [];
 
       exam?.questions.forEach((q) => {
         const ans = answers[q.id];
-        if (q.type === 'single') {
-          formattedAnswers.push({ questionId: q.id, optionId: (ans as string) || null });
+        if (q.type === "single") {
+          formattedAnswers.push({
+            questionId: q.id,
+            optionId: (ans as string) || null,
+          });
         } else {
           const selectedOptions = (ans as string[]) || [];
           if (selectedOptions.length === 0) {
@@ -131,11 +156,13 @@ export default function ExamTakePage() {
         }
       });
 
-      await api.post(`/sessions/${sessionId}/submit`, { answers: formattedAnswers });
+      await api.post(`/sessions/${sessionId}/submit`, {
+        answers: formattedAnswers,
+      });
       navigate(`/sessions/${sessionId}/result`, { replace: true });
     } catch (err) {
-      console.error('Submit failed:', err);
-      toast.error('Nộp bài thất bại. Vui lòng thử lại.');
+      console.error("Submit failed:", err);
+      toast.error("Nộp bài thất bại. Vui lòng thử lại.");
       setSubmitting(false);
     }
   };
@@ -151,7 +178,10 @@ export default function ExamTakePage() {
           <span className="text-white/80">Nộp bài ngay?</span>
           <div className="flex gap-2">
             <button
-              onClick={() => { performSubmit(); toast.dismiss(t.id); }}
+              onClick={() => {
+                performSubmit();
+                toast.dismiss(t.id);
+              }}
               className="px-3 py-1 bg-sky-500 hover:bg-sky-400 text-white text-xs rounded-lg transition-colors"
             >
               Nộp bài
@@ -180,7 +210,7 @@ export default function ExamTakePage() {
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
-    return `${m}:${s < 10 ? '0' : ''}${s}`;
+    return `${m}:${s < 10 ? "0" : ""}${s}`;
   };
 
   if (loading) {
@@ -203,7 +233,6 @@ export default function ExamTakePage() {
 
   return (
     <div className="h-screen flex flex-col bg-slate-950 overflow-hidden">
-
       {/* HEADER */}
       <header className="flex-shrink-0 bg-slate-900/95 backdrop-blur-md border-b border-white/10 px-6 py-3 z-10">
         <div className="flex items-center justify-between">
@@ -213,7 +242,9 @@ export default function ExamTakePage() {
               Tiến độ: {answeredCount}/{questions.length} câu
             </p>
           </div>
-          <div className={`font-mono text-3xl font-black tabular-nums ${timeLeft < 300 ? 'text-red-400 animate-pulse' : 'text-sky-400'}`}>
+          <div
+            className={`font-mono text-3xl font-black tabular-nums ${timeLeft < 300 ? "text-red-400 animate-pulse" : "text-sky-400"}`}
+          >
             {formatTime(timeLeft)}
           </div>
           <button
@@ -221,14 +252,13 @@ export default function ExamTakePage() {
             disabled={submitting}
             className="px-6 py-2.5 bg-sky-500 hover:bg-sky-400 text-white rounded-xl font-semibold hover:scale-105 transition-all duration-200 shadow-lg shadow-sky-500/30 disabled:opacity-50"
           >
-            {submitting ? 'Đang nộp...' : 'Nộp bài'}
+            {submitting ? "Đang nộp..." : "Nộp bài"}
           </button>
         </div>
       </header>
 
       {/* BODY */}
       <div className="flex flex-1 overflow-hidden">
-
         {/* MAIN — danh sách câu hỏi có thể scroll */}
         <main className="flex-1 overflow-y-auto px-8 py-6 space-y-6">
           {questions.map((q, idx) => (
@@ -242,35 +272,46 @@ export default function ExamTakePage() {
                 <span className="flex-shrink-0 w-8 h-8 rounded-full bg-sky-500/20 border border-sky-500/40 flex items-center justify-center text-sky-400 font-bold text-sm">
                   {idx + 1}
                 </span>
-                <p className="text-white font-medium leading-relaxed pt-1">{q.content}</p>
+                <p className="text-white font-medium leading-relaxed pt-1">
+                  {q.content}
+                </p>
               </div>
 
               {/* Options */}
               <div className="space-y-2 ml-11">
-                {q.options.sort((a, b) => a.order - b.order).map((opt) => {
-                  const isSelected = q.type === 'single'
-                    ? answers[q.id] === opt.id
-                    : ((answers[q.id] as string[]) || []).includes(opt.id);
+                {q.options
+                  .sort((a, b) => a.order - b.order)
+                  .map((opt) => {
+                    const isSelected =
+                      q.type === "single"
+                        ? answers[q.id] === opt.id
+                        : ((answers[q.id] as string[]) || []).includes(opt.id);
 
-                  return (
-                    <button
-                      key={opt.id}
-                      onClick={() => handleSelectOption(q.id, opt.id, q.type)}
-                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all duration-150 border ${
-                        isSelected
-                          ? 'bg-sky-500/20 border-sky-500/60 text-sky-300'
-                          : 'bg-slate-700/50 border-white/10 text-white/70 hover:border-white/30 hover:bg-slate-700'
-                      }`}
-                    >
-                      <span className={`flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
-                        isSelected ? 'border-sky-400 bg-sky-400' : 'border-white/30'
-                      }`}>
-                        {isSelected && <span className="w-2 h-2 rounded-full bg-white" />}
-                      </span>
-                      <span className="text-sm">{opt.content}</span>
-                    </button>
-                  );
-                })}
+                    return (
+                      <button
+                        key={opt.id}
+                        onClick={() => handleSelectOption(q.id, opt.id, q.type)}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all duration-150 border ${
+                          isSelected
+                            ? "bg-sky-500/20 border-sky-500/60 text-sky-300"
+                            : "bg-slate-700/50 border-white/10 text-white/70 hover:border-white/30 hover:bg-slate-700"
+                        }`}
+                      >
+                        <span
+                          className={`flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
+                            isSelected
+                              ? "border-sky-400 bg-sky-400"
+                              : "border-white/30"
+                          }`}
+                        >
+                          {isSelected && (
+                            <span className="w-2 h-2 rounded-full bg-white" />
+                          )}
+                        </span>
+                        <span className="text-sm">{opt.content}</span>
+                      </button>
+                    );
+                  })}
               </div>
             </div>
           ))}
@@ -280,17 +321,24 @@ export default function ExamTakePage() {
 
         {/* SIDEBAR — điều hướng câu hỏi */}
         <aside className="flex-shrink-0 w-64 bg-slate-900 border-l border-white/10 overflow-y-auto p-5">
-
           {/* Tiến độ */}
           <div className="mb-5">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-white/50 text-xs font-medium uppercase tracking-wider">Tiến độ</span>
-              <span className="text-sky-400 text-sm font-bold">{answeredCount}/{questions.length}</span>
+              <span className="text-white/50 text-xs font-medium uppercase tracking-wider">
+                Tiến độ
+              </span>
+              <span className="text-sky-400 text-sm font-bold">
+                {answeredCount}/{questions.length}
+              </span>
             </div>
             <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
               <div
                 className="h-full bg-sky-500 rounded-full transition-all duration-300"
-                style={{ width: questions.length ? `${(answeredCount / questions.length) * 100}%` : '0%' }}
+                style={{
+                  width: questions.length
+                    ? `${(answeredCount / questions.length) * 100}%`
+                    : "0%",
+                }}
               />
             </div>
           </div>
@@ -315,13 +363,14 @@ export default function ExamTakePage() {
                 <button
                   key={q.id}
                   onClick={() => {
-                    document.getElementById(`question-${idx + 1}`)
-                      ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    document
+                      .getElementById(`question-${idx + 1}`)
+                      ?.scrollIntoView({ behavior: "smooth", block: "start" });
                   }}
                   className={`aspect-square rounded-lg text-xs font-semibold flex items-center justify-center transition-all duration-150 hover:scale-110 ${
                     isAnswered
-                      ? 'bg-sky-500 text-white shadow-sm shadow-sky-500/30'
-                      : 'bg-slate-700/80 border border-white/10 text-white/40 hover:border-white/30'
+                      ? "bg-sky-500 text-white shadow-sm shadow-sky-500/30"
+                      : "bg-slate-700/80 border border-white/10 text-white/40 hover:border-white/30"
                   }`}
                 >
                   {idx + 1}
