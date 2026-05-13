@@ -55,6 +55,9 @@ export default function App() {
         <Route path="/login"    element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
 
+        {/* Exam Take - Full screen, no Layout */}
+        <Route path="/exams/:id/take" element={<ProtectedRoute><ExamTakePage /></ProtectedRoute>} />
+
         {/* App with Layout */}
         <Route element={<LayoutWrapper />}>
           {/* Public */}
@@ -63,7 +66,6 @@ export default function App() {
 
           {/* Candidate */}
           <Route path="/home" element={<ProtectedRoute><ExamListPage /></ProtectedRoute>} />
-          <Route path="/exams/:id/take"   element={<ProtectedRoute><ExamTakePage /></ProtectedRoute>} />
           <Route path="/sessions/:id/result" element={<ProtectedRoute><ExamResultPage /></ProtectedRoute>} />
           <Route path="/history" element={<ProtectedRoute><HistoryPage /></ProtectedRoute>} />
           <Route path="/classrooms" element={<ProtectedRoute><CandidateClassroom /></ProtectedRoute>} />
