@@ -4,16 +4,32 @@
 
 @layer utilities {
   @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
   }
   @keyframes glow {
-    0%, 100% { box-shadow: 0 0 20px rgba(14, 165, 233, 0.3); }
-    50% { box-shadow: 0 0 40px rgba(14, 165, 233, 0.6); }
+    0%,
+    100% {
+      box-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(14, 165, 233, 0.6);
+    }
   }
   @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   .animate-float {
     animation: float 3s ease-in-out infinite;
@@ -24,4 +40,19 @@
   .animate-fade-up {
     animation: fadeInUp 0.6s ease-out forwards;
   }
+}
+
+/* Dark scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
 }
