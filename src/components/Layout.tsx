@@ -117,7 +117,7 @@ export default function Layout({ children }: LayoutProps) {
                       onMouseEnter={() => setAdminOpen(true)}
                       onMouseLeave={() => setAdminOpen(false)}
                     >
-                      <button className="flex items-center gap-1 text-sm font-medium text-white/60 hover:text-white transition-colors duration-200">
+                      <button className="flex items-center gap-1 text-sm font-medium text-white/60 hover:text-white transition-colors duration-200 py-2">
                         Admin
                         <svg
                           className={`w-4 h-4 transition-transform duration-200 ${adminOpen ? 'rotate-180' : ''}`}
@@ -127,8 +127,10 @@ export default function Layout({ children }: LayoutProps) {
                         </svg>
                       </button>
 
+                      {adminOpen && <div className="absolute top-full left-0 w-full h-2" />}
+
                       {adminOpen && (
-                        <div className="absolute top-full left-0 mt-1 w-52 bg-slate-800 border border-white/10 rounded-xl shadow-xl shadow-black/30 overflow-hidden z-50 py-1">
+                        <div className="absolute top-[calc(100%+4px)] left-0 w-52 bg-slate-800 border border-white/10 rounded-xl shadow-xl shadow-black/30 overflow-hidden z-50 py-1">
                           <Link
                             to="/admin/exams"
                             className="flex items-center gap-2 px-4 py-2.5 text-sm text-white/70 hover:text-white hover:bg-white/10 transition-colors duration-150"
