@@ -45,7 +45,7 @@ const ClassroomDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const [activeTab, setActiveTab] = useState<'members' | 'exams'>('members');
   const [selectedExamId, setSelectedExamId] = useState('');
-  
+
   const queryClient = useQueryClient();
 
   // Queries
@@ -118,12 +118,12 @@ const ClassroomDetailPage = () => {
     },
   });
 
-  if (isLoadingClassroom) return <div className="p-8 text-center text-gray-500">Đang tải chi tiết lớp học...</div>;
-  if (!classroom) return <div className="p-8 text-center text-red-500">Không tìm thấy lớp học</div>;
+  if (isLoadingClassroom) return <div className="p-8 text-center text-white/40">Đang tải chi tiết lớp học...</div>;
+  if (!classroom) return <div className="p-8 text-center text-red-400">Không tìm thấy lớp học</div>;
 
   const pendingMembers = classroom.members.filter(m => m.status === 'pending');
   const approvedMembers = classroom.members.filter(m => m.status === 'approved');
-  
+
   const unassignedTeacherExams = teacherExams?.filter(
     te => !assignedExams?.some(ae => ae.examId === te.id)
   ) || [];
@@ -132,7 +132,7 @@ const ClassroomDetailPage = () => {
     <div className="container mx-auto p-4 max-w-6xl">
       {/* Header */}
       <div className="mb-6">
-        <Link to="/teacher/classrooms" className="text-indigo-600 hover:text-indigo-800 flex items-center gap-1 mb-4 text-sm font-medium">
+        <Link to="/teacher/classrooms" className="text-sky-400 hover:text-sky-300 flex items-center gap-1 mb-4 text-sm font-medium transition-colors">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
@@ -140,24 +140,24 @@ const ClassroomDetailPage = () => {
         </Link>
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">{classroom.name}</h1>
-            <p className="text-gray-500 mt-1">{classroom.description || 'Không có mô tả'}</p>
+            <h1 className="text-3xl font-bold text-white">{classroom.name}</h1>
+            <p className="text-white/40 mt-1">{classroom.description || 'Không có mô tả'}</p>
           </div>
-          <div className="bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm flex items-center gap-3">
-            <span className="text-sm text-gray-500 font-medium">Mã lớp:</span>
-            <span className="text-xl font-mono font-bold text-indigo-600 tracking-wider">{classroom.code}</span>
+          <div className="bg-slate-900 px-4 py-2 rounded-xl border border-white/10 flex items-center gap-3">
+            <span className="text-sm text-white/40 font-medium">Mã lớp:</span>
+            <span className="text-xl font-mono font-bold text-sky-400 tracking-wider">{classroom.code}</span>
           </div>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-gray-200 mb-6">
+      <div className="flex border-b border-white/10 mb-6">
         <button
           onClick={() => setActiveTab('members')}
           className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
-            activeTab === 'members' 
-              ? 'border-indigo-600 text-indigo-600' 
-              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            activeTab === 'members'
+              ? 'border-sky-500 text-sky-400'
+              : 'border-transparent text-white/40 hover:text-white hover:border-white/20'
           }`}
         >
           Thành viên ({classroom.members.length})
@@ -165,9 +165,9 @@ const ClassroomDetailPage = () => {
         <button
           onClick={() => setActiveTab('exams')}
           className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
-            activeTab === 'exams' 
-              ? 'border-indigo-600 text-indigo-600' 
-              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            activeTab === 'exams'
+              ? 'border-sky-500 text-sky-400'
+              : 'border-transparent text-white/40 hover:text-white hover:border-white/20'
           }`}
         >
           Đề thi đã giao ({assignedExams?.length || 0})
@@ -180,34 +180,34 @@ const ClassroomDetailPage = () => {
           {/* Pending Requests */}
           {pendingMembers.length > 0 && (
             <div>
-              <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2 text-yellow-600">
-                <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
+              <h2 className="text-lg font-bold text-amber-400 mb-4 flex items-center gap-2">
+                <span className="w-2 h-2 bg-amber-400 rounded-full"></span>
                 Yêu cầu chờ duyệt ({pendingMembers.length})
               </h2>
-              <div className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
+              <div className="bg-slate-900 rounded-2xl border border-white/10 overflow-hidden">
+                <table className="min-w-full divide-y divide-white/5">
+                  <thead className="bg-slate-800">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Học sinh</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Thao tác</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-white/40 uppercase tracking-wider">Học sinh</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-white/40 uppercase tracking-wider">Email</th>
+                      <th className="px-6 py-3 text-right text-xs font-medium text-white/40 uppercase tracking-wider">Thao tác</th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  <tbody className="divide-y divide-white/5">
                     {pendingMembers.map((member) => (
-                      <tr key={member.id}>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{member.name}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{member.email}</td>
+                      <tr key={member.id} className="hover:bg-white/5 transition-colors">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">{member.name}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-white/40">{member.email}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <button
                             onClick={() => updateMemberStatusMutation.mutate({ userId: member.userId, status: 'approved' })}
-                            className="text-green-600 hover:text-green-900 mr-4"
+                            className="text-green-400 hover:text-green-300 mr-4 transition-colors"
                           >
                             Duyệt
                           </button>
                           <button
                             onClick={() => kickMemberMutation.mutate(member.userId)}
-                            className="text-red-600 hover:text-red-900"
+                            className="text-red-400 hover:text-red-300 transition-colors"
                           >
                             Từ chối
                           </button>
@@ -222,28 +222,28 @@ const ClassroomDetailPage = () => {
 
           {/* Approved Members */}
           <div>
-            <h2 className="text-lg font-bold text-gray-800 mb-4">Danh sách học sinh ({approvedMembers.length})</h2>
-            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+            <h2 className="text-lg font-bold text-white mb-4">Danh sách học sinh ({approvedMembers.length})</h2>
+            <div className="bg-slate-900 rounded-2xl border border-white/10 overflow-hidden">
+              <table className="min-w-full divide-y divide-white/5">
+                <thead className="bg-slate-800">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Học sinh</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ngày tham gia</th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Thao tác</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-white/40 uppercase tracking-wider">Học sinh</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-white/40 uppercase tracking-wider">Email</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-white/40 uppercase tracking-wider">Ngày tham gia</th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-white/40 uppercase tracking-wider">Thao tác</th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="divide-y divide-white/5">
                   {approvedMembers.length === 0 ? (
                     <tr>
-                      <td colSpan={4} className="px-6 py-8 text-center text-gray-500">Chưa có học sinh nào trong lớp</td>
+                      <td colSpan={4} className="px-6 py-8 text-center text-white/30 italic">Chưa có học sinh nào trong lớp</td>
                     </tr>
                   ) : (
                     approvedMembers.map((member) => (
-                      <tr key={member.id}>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{member.name}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{member.email}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <tr key={member.id} className="hover:bg-white/5 transition-colors">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">{member.name}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-white/40">{member.email}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-white/40">
                           {new Date(member.joinedAt).toLocaleDateString('vi-VN')}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -253,7 +253,7 @@ const ClassroomDetailPage = () => {
                                 kickMemberMutation.mutate(member.userId);
                               }
                             }}
-                            className="text-red-400 hover:text-red-600"
+                            className="text-red-400 hover:text-red-300 transition-colors"
                           >
                             Kick
                           </button>
@@ -269,9 +269,9 @@ const ClassroomDetailPage = () => {
       ) : (
         <div className="space-y-8">
           {/* Assign New Exam */}
-          <div className="bg-indigo-50 p-6 rounded-lg border border-indigo-100">
-            <h2 className="text-lg font-bold text-indigo-900 mb-4">Giao đề thi mới</h2>
-            <form 
+          <div className="bg-slate-900 p-6 rounded-2xl border border-white/10">
+            <h2 className="text-lg font-bold text-white mb-4">Giao đề thi mới</h2>
+            <form
               onSubmit={(e) => {
                 e.preventDefault();
                 if (selectedExamId) assignExamMutation.mutate(selectedExamId);
@@ -281,7 +281,7 @@ const ClassroomDetailPage = () => {
               <select
                 value={selectedExamId}
                 onChange={(e) => setSelectedExamId(e.target.value)}
-                className="flex-grow px-4 py-2 border border-indigo-200 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                className="flex-grow px-4 py-3 rounded-xl bg-slate-800 border border-white/10 text-white focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all duration-200"
               >
                 <option value="">-- Chọn đề thi để giao --</option>
                 {unassignedTeacherExams.map(exam => (
@@ -293,13 +293,13 @@ const ClassroomDetailPage = () => {
               <button
                 type="submit"
                 disabled={!selectedExamId || assignExamMutation.isPending}
-                className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 font-medium disabled:opacity-50 transition-colors"
+                className="bg-sky-500 hover:bg-sky-400 text-white px-6 py-2 rounded-xl font-medium disabled:opacity-50 transition-colors"
               >
                 Giao đề
               </button>
             </form>
             {unassignedTeacherExams.length === 0 && (
-              <p className="mt-2 text-sm text-indigo-600 italic">
+              <p className="mt-2 text-sm text-white/40 italic">
                 Tất cả đề thi của bạn đã được giao cho lớp này hoặc bạn chưa có đề thi nào.
               </p>
             )}
@@ -307,30 +307,32 @@ const ClassroomDetailPage = () => {
 
           {/* Assigned Exams List */}
           <div>
-            <h2 className="text-lg font-bold text-gray-800 mb-4">Đề thi đã giao cho lớp</h2>
-            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+            <h2 className="text-lg font-bold text-white mb-4">Đề thi đã giao cho lớp</h2>
+            <div className="bg-slate-900 rounded-2xl border border-white/10 overflow-hidden">
+              <table className="min-w-full divide-y divide-white/5">
+                <thead className="bg-slate-800">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tên đề</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thời gian</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng thái</th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Thao tác</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-white/40 uppercase tracking-wider">Tên đề</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-white/40 uppercase tracking-wider">Thời gian</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-white/40 uppercase tracking-wider">Trạng thái</th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-white/40 uppercase tracking-wider">Thao tác</th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="divide-y divide-white/5">
                   {isLoadingAssigned ? (
-                    <tr><td colSpan={4} className="px-6 py-8 text-center text-gray-500">Đang tải danh sách đề...</td></tr>
+                    <tr><td colSpan={4} className="px-6 py-8 text-center text-white/30">Đang tải danh sách đề...</td></tr>
                   ) : assignedExams?.length === 0 ? (
-                    <tr><td colSpan={4} className="px-6 py-8 text-center text-gray-500">Chưa có đề thi nào được giao cho lớp này</td></tr>
+                    <tr><td colSpan={4} className="px-6 py-8 text-center text-white/30 italic">Chưa có đề thi nào được giao cho lớp này</td></tr>
                   ) : (
                     assignedExams?.map((exam) => (
-                      <tr key={exam.assignmentId}>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{exam.examTitle}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{exam.examDuration} phút</td>
+                      <tr key={exam.assignmentId} className="hover:bg-white/5 transition-colors">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">{exam.examTitle}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-white/40">{exam.examDuration} phút</td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            exam.isPublished ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                            exam.isPublished
+                              ? 'bg-green-500/10 border border-green-500/30 text-green-400'
+                              : 'bg-white/5 border border-white/10 text-white/40'
                           }`}>
                             {exam.isPublished ? 'Đã công khai' : 'Bản nháp'}
                           </span>
@@ -342,7 +344,7 @@ const ClassroomDetailPage = () => {
                                 unassignExamMutation.mutate(exam.examId);
                               }
                             }}
-                            className="text-red-400 hover:text-red-600"
+                            className="text-red-400 hover:text-red-300 transition-colors"
                           >
                             Bỏ giao
                           </button>

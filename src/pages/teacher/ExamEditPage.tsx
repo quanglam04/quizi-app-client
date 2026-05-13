@@ -272,7 +272,7 @@ export default function TeacherExamEdit() {
   };
 
   if (isLoading)
-    return <div className="text-center py-20">Đang tải dữ liệu...</div>;
+    return <div className="text-center py-20 text-white/60">Đang tải dữ liệu...</div>;
 
   return (
     <div className="space-y-10 pb-20">
@@ -280,7 +280,7 @@ export default function TeacherExamEdit() {
         <div className="flex items-center space-x-4">
           <button
             onClick={() => navigate("/teacher/exams")}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-white/40 hover:text-white transition-colors"
           >
             <svg
               className="h-6 w-6"
@@ -296,7 +296,7 @@ export default function TeacherExamEdit() {
               />
             </svg>
           </button>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-white">
             {isNew ? "Tạo đề thi mới" : "Chỉnh sửa đề thi"}
           </h1>
         </div>
@@ -310,59 +310,59 @@ export default function TeacherExamEdit() {
       </div>
 
       {/* Section 1: Thông tin đề thi */}
-      <section className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm space-y-4">
-        <h2 className="text-lg font-semibold border-b pb-2 mb-4">
+      <section className="bg-slate-900 p-6 rounded-2xl border border-white/10 space-y-4">
+        <h2 className="text-lg font-semibold text-white border-b border-white/10 pb-2 mb-4">
           Thông tin chung
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="col-span-2">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-white/70 mb-2">
               Tên đề thi
             </label>
             <input
               type="text"
               {...register("title")}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="w-full px-4 py-3 rounded-xl bg-slate-800 border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all duration-200"
             />
             {errors.title && (
-              <p className="mt-1 text-xs text-red-500">
+              <p className="mt-1 text-xs text-red-400">
                 {errors.title.message}
               </p>
             )}
           </div>
           <div className="col-span-2">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-white/70 mb-2">
               Mô tả
             </label>
             <textarea
               {...register("description")}
               rows={3}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="w-full px-4 py-3 rounded-xl bg-slate-800 border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all duration-200"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-white/70 mb-2">
               Thời gian làm bài (phút)
             </label>
             <input
               type="number"
               {...register("duration")}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="w-full px-4 py-3 rounded-xl bg-slate-800 border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all duration-200"
             />
             {errors.duration && (
-              <p className="mt-1 text-xs text-red-500">
+              <p className="mt-1 text-xs text-red-400">
                 {errors.duration.message}
               </p>
             )}
           </div>
-          
+
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-white/70 mb-2">
               Chế độ hiển thị
             </label>
-            <select 
+            <select
               {...register('visibility')}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="w-full px-4 py-3 rounded-xl bg-slate-800 border border-white/10 text-white focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all duration-200"
             >
               <option value="public">Công khai — tất cả mọi người thấy</option>
               <option value="class_only">Chỉ lớp được giao — học sinh phải thuộc lớp</option>
@@ -374,11 +374,11 @@ export default function TeacherExamEdit() {
               id="isPublished"
               type="checkbox"
               {...register("isPublished")}
-              className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+              className="h-4 w-4 accent-sky-500 rounded"
             />
             <label
               htmlFor="isPublished"
-              className="ml-2 block text-sm text-gray-900 font-medium"
+              className="ml-2 block text-sm text-white font-medium"
             >
               Công khai đề thi (Published)
             </label>
@@ -392,11 +392,11 @@ export default function TeacherExamEdit() {
       >
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-bold text-gray-900">
+            <h2 className="text-xl font-bold text-white">
               Danh sách câu hỏi ({questions.length})
             </h2>
             {isNew && (
-              <p className="text-xs text-orange-600 font-medium">
+              <p className="text-xs text-orange-400 font-medium">
                 Lưu đề thi trước khi quản lý câu hỏi
               </p>
             )}
@@ -404,11 +404,11 @@ export default function TeacherExamEdit() {
           <div className="flex space-x-2">
             <button
               onClick={downloadTemplate}
-              className="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50"
+              className="inline-flex items-center px-3 py-1.5 border border-white/10 text-xs font-medium rounded text-white/70 bg-slate-800 hover:bg-white/10 transition-all"
             >
               Tải template Excel
             </button>
-            <label className="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 cursor-pointer">
+            <label className="inline-flex items-center px-3 py-1.5 border border-white/10 text-xs font-medium rounded text-white/70 bg-slate-800 hover:bg-white/10 transition-all cursor-pointer">
               Import Excel
               <input
                 type="file"
@@ -422,7 +422,7 @@ export default function TeacherExamEdit() {
                 setEditingQuestionIdx(null);
                 setShowQuestionForm(true);
               }}
-              className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
+              className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-white bg-indigo-600 hover:bg-indigo-700"
             >
               Thêm câu hỏi
             </button>
@@ -433,9 +433,9 @@ export default function TeacherExamEdit() {
           {addQuestionMutation.isPending ||
           bulkImportMutation.isPending ||
           deleteQuestionMutation.isPending ? (
-            <div className="text-center py-10 text-gray-500">Đang xử lý...</div>
+            <div className="text-center py-10 text-white/40">Đang xử lý...</div>
           ) : questions.length === 0 ? (
-            <div className="text-center py-10 bg-gray-50 border-2 border-dashed border-gray-200 rounded-lg text-gray-500 italic">
+            <div className="text-center py-10 bg-slate-900 border-2 border-dashed border-white/10 rounded-2xl text-white/30 italic">
               Chưa có câu hỏi nào.
             </div>
           ) : (
@@ -444,18 +444,18 @@ export default function TeacherExamEdit() {
               .map((q, idx) => (
                 <div
                   key={q.id || idx}
-                  className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm flex items-start justify-between"
+                  className="bg-slate-900 p-4 rounded-2xl border border-white/10 flex items-start justify-between"
                 >
                   <div>
                     <div className="flex items-center space-x-2 mb-1">
-                      <span className="font-bold text-indigo-600">
+                      <span className="font-bold text-indigo-400">
                         Câu {q.order}:
                       </span>
-                      <span className="text-xs font-medium bg-gray-100 px-2 py-0.5 rounded uppercase">
+                      <span className="text-xs font-medium bg-white/5 text-white/40 border border-white/10 px-2 py-0.5 rounded uppercase">
                         {q.type}
                       </span>
                     </div>
-                    <p className="text-gray-800">{q.content}</p>
+                    <p className="text-white">{q.content}</p>
                     <div className="mt-2 space-y-1">
                       {q.options
                         .sort((a, b) => a.order - b.order)
@@ -464,14 +464,14 @@ export default function TeacherExamEdit() {
                             key={opt.id || oIdx}
                             className={`text-sm flex items-center gap-1 ${
                               opt.isCorrect
-                                ? "text-green-600 font-semibold"
-                                : "text-gray-500"
+                                ? "text-green-400 font-semibold"
+                                : "text-white/40"
                             }`}
                           >
                             <span>{String.fromCharCode(65 + oIdx)}.</span>
                             <span>{opt.content}</span>
                             {opt.isCorrect && (
-                              <span className="ml-1 text-xs bg-green-100 text-green-700 px-1.5 py-0.5 rounded">
+                              <span className="ml-1 text-xs bg-green-500/10 text-green-400 border border-green-500/30 px-1.5 py-0.5 rounded">
                                 ✓ Đúng
                               </span>
                             )}
@@ -482,7 +482,7 @@ export default function TeacherExamEdit() {
                   <div className="flex space-x-2 ml-4">
                     <button
                       onClick={() => removeQuestion(idx)}
-                      className="text-red-600 hover:text-red-900 text-xs font-medium"
+                      className="text-red-400 hover:text-red-300 text-xs font-medium"
                     >
                       Xóa
                     </button>
@@ -553,13 +553,13 @@ function QuestionFormModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <div className="p-6 border-b flex justify-between items-center sticky top-0 bg-white z-10">
-          <h3 className="text-xl font-bold text-gray-900">Thêm câu hỏi mới</h3>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+      <div className="bg-slate-900 rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-white/10">
+        <div className="p-6 border-b border-white/10 flex justify-between items-center sticky top-0 bg-slate-900 z-10">
+          <h3 className="text-xl font-bold text-white">Thêm câu hỏi mới</h3>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-white/40 hover:text-white transition-colors"
           >
             <svg
               className="h-6 w-6"
@@ -578,26 +578,26 @@ function QuestionFormModal({
         </div>
         <div className="p-6 space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-white/70 mb-2">
               Nội dung câu hỏi
             </label>
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
               rows={3}
-              className="w-full border border-gray-300 rounded-md shadow-sm p-2 text-sm"
+              className="w-full px-4 py-3 rounded-xl bg-slate-800 border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all duration-200"
               placeholder="Nhập câu hỏi..."
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-white/70 mb-2">
               Loại câu hỏi
             </label>
             <select
               value={type}
               onChange={(e) => setType(e.target.value as "single" | "multiple")}
-              className="w-full border border-gray-300 rounded-md shadow-sm p-2 text-sm"
+              className="w-full px-4 py-3 rounded-xl bg-slate-800 border border-white/10 text-white focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all duration-200"
             >
               <option value="single">Single Choice</option>
               <option value="multiple">Multiple Choice</option>
@@ -605,7 +605,7 @@ function QuestionFormModal({
           </div>
 
           <div className="space-y-3">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-white/70">
               Các phương án trả lời
             </label>
             {options.map((opt, idx) => (
@@ -614,7 +614,7 @@ function QuestionFormModal({
                   type={type === "single" ? "radio" : "checkbox"}
                   checked={opt.isCorrect}
                   onChange={() => handleToggleCorrect(idx)}
-                  className="h-5 w-5 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                  className="h-5 w-5 accent-sky-500"
                 />
                 <input
                   type="text"
@@ -624,7 +624,7 @@ function QuestionFormModal({
                     next[idx].content = e.target.value;
                     setOptions(next);
                   }}
-                  className="flex-grow border border-gray-300 rounded-md shadow-sm p-2 text-sm"
+                  className="flex-grow px-4 py-3 rounded-xl bg-slate-800 border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all duration-200"
                   placeholder={`Đáp án ${String.fromCharCode(65 + idx)}`}
                 />
               </div>
@@ -632,29 +632,29 @@ function QuestionFormModal({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-white/70 mb-2">
               Giải thích (Optional)
             </label>
             <textarea
               value={explain}
               onChange={(e) => setExplain(e.target.value)}
               rows={2}
-              className="w-full border border-gray-300 rounded-md shadow-sm p-2 text-sm"
+              className="w-full px-4 py-3 rounded-xl bg-slate-800 border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all duration-200"
               placeholder="Giải thích..."
             />
           </div>
         </div>
-        <div className="p-6 border-t flex justify-end space-x-3 bg-gray-50 rounded-b-xl">
+        <div className="p-6 border-t border-white/10 flex justify-end space-x-3 bg-slate-900/50 rounded-b-3xl">
           <button
             onClick={onClose}
-            className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-white"
+            className="px-4 py-2 text-white/40 font-medium hover:text-white transition-colors"
           >
             Hủy
           </button>
           <button
             onClick={handleSave}
             disabled={loading}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-md text-sm font-medium hover:bg-indigo-700 disabled:opacity-50"
+            className="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-medium hover:bg-indigo-700 disabled:opacity-50"
           >
             {loading ? "Đang lưu..." : "Xác nhận"}
           </button>

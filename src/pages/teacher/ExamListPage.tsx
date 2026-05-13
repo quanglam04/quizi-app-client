@@ -63,20 +63,20 @@ export default function TeacherExamList() {
 
   if (isLoading)
     return (
-      <div className="text-center py-20">Đang tải danh sách đề thi...</div>
+      <div className="text-center py-20 text-white/60">Đang tải danh sách đề thi...</div>
     );
   if (error)
     return (
-      <div className="text-center py-20 text-red-500">Đã có lỗi xảy ra.</div>
+      <div className="text-center py-20 text-red-400">Đã có lỗi xảy ra.</div>
     );
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">Quản lý đề thi của tôi</h1>
+        <h1 className="text-2xl font-bold text-white">Quản lý đề thi của tôi</h1>
         <button
           onClick={() => navigate("/teacher/exams/new")}
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
+          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 transition-colors"
         >
           <svg
             className="-ml-1 mr-2 h-5 w-5"
@@ -95,10 +95,10 @@ export default function TeacherExamList() {
         </button>
       </div>
 
-      <div className="bg-white shadow overflow-hidden sm:rounded-md border border-gray-200">
-        <ul className="divide-y divide-gray-200">
+      <div className="bg-slate-900 rounded-2xl border border-white/10 overflow-hidden">
+        <ul className="divide-y divide-white/5">
           {exams?.length === 0 ? (
-            <li className="px-6 py-12 text-center text-gray-500">
+            <li className="px-6 py-12 text-center text-white/30 italic">
               Bạn chưa có đề thi nào. Hãy tạo mới!
             </li>
           ) : (
@@ -111,19 +111,19 @@ export default function TeacherExamList() {
               .map((exam) => (
                 <li
                   key={exam.id}
-                  className="hover:bg-gray-50 transition-colors"
+                  className="hover:bg-white/5 transition-colors"
                 >
                   <div className="px-6 py-4 flex items-center justify-between">
                     <div className="flex-grow min-w-0 pr-4">
                       <div className="flex items-center flex-wrap gap-2">
-                        <p className="text-sm font-bold text-indigo-600 truncate">
+                        <p className="text-sm font-bold text-sky-400 truncate">
                           {exam.title}
                         </p>
                         <span
                           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                             exam.isPublished
-                              ? "bg-green-100 text-green-800"
-                              : "bg-gray-100 text-gray-800"
+                              ? "bg-green-500/10 border border-green-500/30 text-green-400"
+                              : "bg-white/5 border border-white/10 text-white/40"
                           }`}
                         >
                           {exam.isPublished ? "Published" : "Draft"}
@@ -131,17 +131,17 @@ export default function TeacherExamList() {
                         <span
                           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                             exam.visibility === 'public'
-                              ? "bg-blue-100 text-blue-800"
-                              : "bg-purple-100 text-purple-800"
+                              ? "bg-sky-500/10 border border-sky-500/30 text-sky-400"
+                              : "bg-purple-500/10 border border-purple-500/30 text-purple-400"
                           }`}
                         >
                           {exam.visibility === 'public' ? "Công khai" : "Chỉ lớp"}
                         </span>
                       </div>
-                      <div className="mt-2 flex items-center text-sm text-gray-500 space-x-4">
+                      <div className="mt-2 flex items-center text-sm text-white/40 space-x-4">
                         <div className="flex items-center">
                           <svg
-                            className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400"
+                            className="flex-shrink-0 mr-1.5 h-4 w-4 text-white/20"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -157,7 +157,7 @@ export default function TeacherExamList() {
                         </div>
                         <div className="flex items-center">
                           <svg
-                            className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400"
+                            className="flex-shrink-0 mr-1.5 h-4 w-4 text-white/20"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -176,19 +176,19 @@ export default function TeacherExamList() {
                     <div className="flex items-center space-x-3">
                       <button
                         onClick={() => handleToggle(exam.id, exam.isPublished)}
-                        className={`text-sm font-medium ${exam.isPublished ? "text-orange-600 hover:text-orange-900" : "text-green-600 hover:text-green-900"}`}
+                        className={`text-sm font-medium transition-colors ${exam.isPublished ? "text-orange-400 hover:text-orange-300" : "text-green-400 hover:text-green-300"}`}
                       >
                         {exam.isPublished ? "Hạ xuống Draft" : "Công khai"}
                       </button>
                       <Link
                         to={`/teacher/exams/${exam.id}`}
-                        className="text-indigo-600 hover:text-indigo-900 text-sm font-medium"
+                        className="text-sky-400 hover:text-sky-300 text-sm font-medium transition-colors"
                       >
                         Chỉnh sửa
                       </Link>
                       <button
                         onClick={() => handleDelete(exam.id, exam.title)}
-                        className="text-red-600 hover:text-red-900 text-sm font-medium"
+                        className="text-red-400 hover:text-red-300 text-sm font-medium transition-colors"
                       >
                         Xóa
                       </button>
