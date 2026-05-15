@@ -423,7 +423,7 @@ export default function TeacherExamEdit() {
             </select>
           </div>
 
-          <div className="flex items-center h-full pt-6">
+          {/* <div className="flex items-center h-full pt-6">
             <input
               id="isPublished"
               type="checkbox"
@@ -436,7 +436,7 @@ export default function TeacherExamEdit() {
             >
               Công khai đề thi (Published)
             </label>
-          </div>
+          </div> */}
         </div>
       </section>
 

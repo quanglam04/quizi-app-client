@@ -48,22 +48,10 @@ const LandingPage = () => {
               >
                 Quy trình
               </button>
-              <Link
-                to="/blog"
-                className="text-sm font-medium text-white/70 hover:text-sky-400 transition-colors"
-              >
-                Blog
-              </Link>
             </div>
             <div className="flex items-center gap-4">
               <Link
                 to="/login"
-                className="text-sm font-medium text-white/70 hover:text-sky-400 transition-colors"
-              >
-                Đăng nhập
-              </Link>
-              <Link
-                to="/register"
                 className="bg-sky-500 hover:bg-sky-400 text-white px-5 py-2 rounded-xl font-bold transition-all hover:scale-105 shadow-lg shadow-sky-500/25 flex items-center gap-2"
               >
                 Bắt đầu <span className="text-lg">→</span>
@@ -402,10 +390,10 @@ const LandingPage = () => {
             phí.
           </p>
           <Link
-            to="/register"
+            to="/login"
             className="inline-flex items-center gap-2 px-10 py-5 bg-white text-sky-600 rounded-2xl font-bold text-xl transition-all hover:scale-105 shadow-2xl hover:shadow-white/20"
           >
-            Đăng ký miễn phí →
+            Đăng nhập →
           </Link>
         </div>
       </section>
