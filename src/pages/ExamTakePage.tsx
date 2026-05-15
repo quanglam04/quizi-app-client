@@ -272,9 +272,22 @@ export default function ExamTakePage() {
                 <span className="flex-shrink-0 w-8 h-8 rounded-full bg-sky-500/20 border border-sky-500/40 flex items-center justify-center text-sky-400 font-bold text-sm">
                   {idx + 1}
                 </span>
-                <p className="text-white font-medium leading-relaxed pt-1">
-                  {q.content}
-                </p>
+                <div className="flex-1 pt-1">
+                  <p className="text-white font-medium leading-relaxed">
+                    {q.content}
+                  </p>
+                  <span
+                    className={`inline-flex items-center mt-2 px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest border ${
+                      q.type === "multiple"
+                        ? "bg-purple-500/10 text-purple-400 border-purple-500/30"
+                        : "bg-sky-500/10 text-sky-400 border-sky-500/30"
+                    }`}
+                  >
+                    {q.type === "multiple"
+                      ? "Multiple choice"
+                      : "Single choice"}
+                  </span>
+                </div>
               </div>
 
               {/* Options */}
