@@ -219,13 +219,26 @@ export default function AdminExamEdit() {
     const ws = XLSX.utils.json_to_sheet([
       {
         STT: 1,
-        "Câu hỏi": "Thủ đô của Việt Nam là gì?",
+        "Cau hoi": "Thủ đô của Việt Nam là gì?",
+        Loai: "single",
         A: "Hà Nội",
         B: "TP. Hồ Chí Minh",
         C: "Đà Nẵng",
         D: "Huế",
-        "Dap an dung": "A", // đổi thành không dấu, không ký tự đặc biệt
-        "Giai thich": "Hà Nội là thủ đô của Việt Nam.", // tương tự
+        "Dap an dung": "A",
+        "Giai thich": "Hà Nội là thủ đô của Việt Nam.",
+      },
+      {
+        STT: 2,
+        "Cau hoi": "Những ngôn ngữ nào là ngôn ngữ lập trình?",
+        Loai: "multiple",
+        A: "Python",
+        B: "HTML",
+        C: "JavaScript",
+        D: "CSS",
+        "Dap an dung": "AC",
+        "Giai thich":
+          "Python và JavaScript là ngôn ngữ lập trình. HTML và CSS là ngôn ngữ đánh dấu/định dạng.",
       },
     ]);
     const wb = XLSX.utils.book_new();
@@ -251,33 +264,32 @@ export default function AdminExamEdit() {
       const data: any[] = XLSX.utils.sheet_to_json(ws);
 
       const importedQuestions: Question[] = data.map((row) => {
-        const options: Option[] = [
-          {
-            content: String(row["A"] || ""),
-            order: 0,
-            isCorrect: row["Dap an dung"] === "A",
-          },
-          {
-            content: String(row["B"] || ""),
-            order: 1,
-            isCorrect: row["Dap an dung"] === "B",
-          },
-          {
-            content: String(row["C"] || ""),
-            order: 2,
-            isCorrect: row["Dap an dung"] === "C",
-          },
-          {
-            content: String(row["D"] || ""),
-            order: 3,
-            isCorrect: row["Dap an dung"] === "D",
-          },
-        ];
+        const loai = String(row["Loai"] || "single")
+          .trim()
+          .toLowerCase();
+        const type: "single" | "multiple" =
+          loai === "multiple" ? "multiple" : "single";
+
+        // Parse đáp án đúng — ví dụ "AC" -> ["A", "C"]
+        const dapAnDung = String(row["Dap an dung"] || "")
+          .trim()
+          .toUpperCase();
+        const correctLetters = dapAnDung
+          .split("")
+          .filter((c) => ["A", "B", "C", "D"].includes(c));
+
+        const optionLabels = ["A", "B", "C", "D"];
+        const options: Option[] = optionLabels.map((label, idx) => ({
+          content: String(row[label] || ""),
+          order: idx,
+          isCorrect: correctLetters.includes(label),
+        }));
+
         return {
-          content: String(row["Câu hỏi"] || ""),
-          type: "single",
+          content: String(row["Cau hoi"] || row["Câu hỏi"] || ""),
+          type,
           order: Number(row["STT"]) || questions.length + 1,
-          explain: row["Giai thich"] || undefined,
+          explain: row["Giai thich"] ? String(row["Giai thich"]) : null,
           options,
         };
       });
@@ -470,8 +482,14 @@ export default function AdminExamEdit() {
                       <span className="flex-shrink-0 w-7 h-7 bg-sky-500/10 text-sky-400 border border-sky-500/20 rounded-lg flex items-center justify-center text-xs font-black">
                         {q.order}
                       </span>
-                      <span className="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest bg-white/5 text-white/40 border border-white/10">
-                        {q.type}
+                      <span
+                        className={`px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest border ${
+                          q.type === "multiple"
+                            ? "bg-purple-500/10 text-purple-400 border-purple-500/30"
+                            : "bg-white/5 text-white/40 border-white/10"
+                        }`}
+                      >
+                        {q.type === "multiple" ? "Multiple" : "Single"}
                       </span>
                     </div>
                     <p className="text-white text-lg font-medium leading-relaxed mb-6">{q.content}</p>
@@ -490,7 +508,20 @@ export default function AdminExamEdit() {
                             <span className="font-black text-[10px] uppercase opacity-40">
                               {String.fromCharCode(65 + oIdx)}
                             </span>
-                            <span className="text-sm font-medium">{opt.content}</span>
+                            <span className="text-sm font-medium flex-1">{opt.content}</span>
+                            {opt.isCorrect && (
+                              <svg
+                                className="w-4 h-4 flex-shrink-0"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                            )}
                           </div>
                         ))}
                     </div>

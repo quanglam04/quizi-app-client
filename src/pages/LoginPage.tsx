@@ -59,7 +59,10 @@ export default function LoginPage() {
       >
         {/* Orbs */}
         <div className="absolute top-20 left-10 w-64 h-64 bg-sky-500/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-10 w-48 h-48 bg-cyan-500/15 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <div
+          className="absolute bottom-20 right-10 w-48 h-48 bg-cyan-500/15 rounded-full blur-3xl animate-pulse"
+          style={{ animationDelay: "1s" }}
+        />
 
         {/* Logo */}
         <div className="relative z-10 text-center">
@@ -122,7 +125,9 @@ export default function LoginPage() {
                 } text-white placeholder-white/20 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all duration-200`}
               />
               {errors.email && (
-                <p className="mt-1 text-xs text-red-500">{errors.email.message}</p>
+                <p className="mt-1 text-xs text-red-500">
+                  {errors.email.message}
+                </p>
               )}
             </div>
 
@@ -139,7 +144,9 @@ export default function LoginPage() {
                 } text-white placeholder-white/20 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all duration-200`}
               />
               {errors.password && (
-                <p className="mt-1 text-xs text-red-500">{errors.password.message}</p>
+                <p className="mt-1 text-xs text-red-500">
+                  {errors.password.message}
+                </p>
               )}
             </div>
 
@@ -158,7 +165,7 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <p className="text-center text-white/40 text-sm mt-6">
+          <p className="text-center text-white/40 text-sm mt-6 hidden">
             Chưa có tài khoản?{" "}
             <Link
               to="/register"
