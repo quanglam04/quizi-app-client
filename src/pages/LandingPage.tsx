@@ -293,9 +293,9 @@ const LandingPage = () => {
             ))}
           </div>
         </div>
-
-        <div className="absolute inset-0 bg-slate-950/30" />
       </section>
+
+      <div className="absolute inset-0 bg-slate-950/30" />
 
       {/* How it works Section */}
       <section id="how-it-works" className="py-24 bg-slate-950 overflow-hidden">
