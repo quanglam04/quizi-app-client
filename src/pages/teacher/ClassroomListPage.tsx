@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { api } from '../../lib/api';
-import toast from 'react-hot-toast';
-import { SkeletonCard } from '../../components/Skeleton';
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { api } from "../../lib/api";
+import toast from "react-hot-toast";
+import { SkeletonCard } from "../../components/Skeleton";
+import { Link } from "react-router-dom";
 
 interface Classroom {
   id: string;
@@ -12,39 +12,37 @@ interface Classroom {
   code: string;
   teacherId: string;
   createdAt: string;
-  _count?: {
-    members: number;
-  };
+  memberCount?: number;
 }
 
 const ClassroomListPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newClassName, setNewClassName] = useState('');
-  const [newClassDescription, setNewClassDescription] = useState('');
+  const [newClassName, setNewClassName] = useState("");
+  const [newClassDescription, setNewClassDescription] = useState("");
   const [createdClassCode, setCreatedClassCode] = useState<string | null>(null);
 
   const queryClient = useQueryClient();
 
   const { data: classrooms, isLoading } = useQuery<Classroom[]>({
-    queryKey: ['teacher-classrooms'],
+    queryKey: ["teacher-classrooms"],
     queryFn: async () => {
-      const res = await api.get('/classrooms/my');
+      const res = await api.get("/classrooms/my");
       return res.data;
     },
   });
 
   const createMutation = useMutation({
-    mutationFn: async (data: { name: string, description?: string }) => {
-      const res = await api.post('/classrooms', data);
+    mutationFn: async (data: { name: string; description?: string }) => {
+      const res = await api.post("/classrooms", data);
       return res.data;
     },
     onSuccess: (data) => {
-      toast.success('Tạo lớp học thành công!');
+      toast.success("Tạo lớp học thành công!");
       setCreatedClassCode(data.code);
-      queryClient.invalidateQueries({ queryKey: ['teacher-classrooms'] });
+      queryClient.invalidateQueries({ queryKey: ["teacher-classrooms"] });
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || 'Lỗi khi tạo lớp học');
+      toast.error(err.response?.data?.message || "Lỗi khi tạo lớp học");
     },
   });
 
@@ -53,17 +51,20 @@ const ClassroomListPage = () => {
       await api.delete(`/classrooms/${id}`);
     },
     onSuccess: () => {
-      toast.success('Đã xóa lớp học');
-      queryClient.invalidateQueries({ queryKey: ['teacher-classrooms'] });
+      toast.success("Đã xóa lớp học");
+      queryClient.invalidateQueries({ queryKey: ["teacher-classrooms"] });
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || 'Lỗi khi xóa lớp học');
+      toast.error(err.response?.data?.message || "Lỗi khi xóa lớp học");
     },
   });
 
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault();
-    createMutation.mutate({ name: newClassName, description: newClassDescription });
+    createMutation.mutate({
+      name: newClassName,
+      description: newClassDescription,
+    });
   };
 
   const handleDelete = (id: string, name: string) => {
@@ -73,7 +74,10 @@ const ClassroomListPage = () => {
           <span className="text-white/80">Xóa lớp "{name}"?</span>
           <div className="flex gap-2">
             <button
-              onClick={() => { deleteMutation.mutate(id); toast.dismiss(t.id); }}
+              onClick={() => {
+                deleteMutation.mutate(id);
+                toast.dismiss(t.id);
+              }}
               className="px-3 py-1 bg-red-500 hover:bg-red-400 text-white text-xs rounded-lg transition-colors"
             >
               Xóa
@@ -102,8 +106,8 @@ const ClassroomListPage = () => {
   const closeModal = () => {
     setIsModalOpen(false);
     setCreatedClassCode(null);
-    setNewClassName('');
-    setNewClassDescription('');
+    setNewClassName("");
+    setNewClassDescription("");
   };
 
   return (
@@ -114,8 +118,18 @@ const ClassroomListPage = () => {
           onClick={() => setIsModalOpen(true)}
           className="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 transition-colors font-medium flex items-center gap-2"
         >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 4v16m8-8H4"
+            />
           </svg>
           Tạo lớp mới
         </button>
@@ -140,23 +154,43 @@ const ClassroomListPage = () => {
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {classrooms?.map((cls) => (
-            <div key={cls.id} className="bg-slate-900 rounded-2xl border border-white/10 overflow-hidden flex flex-col hover:border-sky-500/30 transition-all duration-300">
+            <div
+              key={cls.id}
+              className="bg-slate-900 rounded-2xl border border-white/10 overflow-hidden flex flex-col hover:border-sky-500/30 transition-all duration-300"
+            >
               <div className="p-5 flex-grow">
-                <h3 className="text-xl font-bold text-white mb-2 truncate" title={cls.name}>
+                <h3
+                  className="text-xl font-bold text-white mb-2 truncate"
+                  title={cls.name}
+                >
                   {cls.name}
                 </h3>
                 <div className="bg-slate-800 px-3 py-2 rounded-xl mb-4 inline-block">
-                  <span className="text-xs text-white/40 uppercase font-semibold block mb-1">Mã lớp</span>
-                  <span className="text-lg font-mono font-bold text-sky-400 tracking-wider">{cls.code}</span>
+                  <span className="text-xs text-white/40 uppercase font-semibold block mb-1">
+                    Mã lớp
+                  </span>
+                  <span className="text-lg font-mono font-bold text-sky-400 tracking-wider">
+                    {cls.code}
+                  </span>
                 </div>
                 <p className="text-white/40 text-sm line-clamp-2 mb-4 h-10">
-                  {cls.description || 'Không có mô tả'}
+                  {cls.description || "Không có mô tả"}
                 </p>
                 <div className="flex items-center text-sm text-white/60">
-                  <svg className="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                  <svg
+                    className="w-4 h-4 mr-1.5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                    />
                   </svg>
-                  {cls._count?.members || 0} thành viên
+                  {cls.memberCount || 0} thành viên
                 </div>
               </div>
               <div className="px-5 py-4 bg-slate-800/50 border-t border-white/5 flex justify-between items-center">
@@ -185,18 +219,33 @@ const ClassroomListPage = () => {
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-bold text-white">
-                  {createdClassCode ? 'Lớp học đã được tạo' : 'Tạo lớp học mới'}
+                  {createdClassCode ? "Lớp học đã được tạo" : "Tạo lớp học mới"}
                 </h2>
-                <button onClick={closeModal} className="text-white/40 hover:text-white transition-colors">
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <button
+                  onClick={closeModal}
+                  className="text-white/40 hover:text-white transition-colors"
+                >
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               </div>
 
               {createdClassCode ? (
                 <div className="text-center py-4">
-                  <p className="text-white/60 mb-4">Gửi mã này cho học sinh để tham gia vào lớp:</p>
+                  <p className="text-white/60 mb-4">
+                    Gửi mã này cho học sinh để tham gia vào lớp:
+                  </p>
                   <div className="bg-sky-500/10 p-6 rounded-xl border-2 border-sky-500/30 mb-6">
                     <span className="text-4xl font-mono font-black text-sky-400 tracking-widest">
                       {createdClassCode}
@@ -213,7 +262,9 @@ const ClassroomListPage = () => {
                 <form onSubmit={handleCreate}>
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-white/70 mb-2">Tên lớp học *</label>
+                      <label className="block text-sm font-medium text-white/70 mb-2">
+                        Tên lớp học *
+                      </label>
                       <input
                         type="text"
                         required
@@ -224,7 +275,9 @@ const ClassroomListPage = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-white/70 mb-2">Mô tả (không bắt buộc)</label>
+                      <label className="block text-sm font-medium text-white/70 mb-2">
+                        Mô tả (không bắt buộc)
+                      </label>
                       <textarea
                         value={newClassDescription}
                         onChange={(e) => setNewClassDescription(e.target.value)}
@@ -247,7 +300,7 @@ const ClassroomListPage = () => {
                       disabled={createMutation.isPending}
                       className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 font-medium disabled:opacity-50 transition-colors"
                     >
-                      {createMutation.isPending ? 'Đang tạo...' : 'Tạo lớp'}
+                      {createMutation.isPending ? "Đang tạo..." : "Tạo lớp"}
                     </button>
                   </div>
                 </form>
