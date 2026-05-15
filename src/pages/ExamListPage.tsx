@@ -10,6 +10,7 @@ interface Exam {
   duration: number;
   isPublished: boolean;
   createdAt: string;
+  completedByMe?: boolean;
 }
 
 export default function ExamListPage() {
@@ -59,11 +60,29 @@ export default function ExamListPage() {
               key={exam.id}
               className="p-6 rounded-2xl bg-slate-800/50 border border-white/10
               hover:-translate-y-1 hover:border-sky-500/40 hover:shadow-lg hover:shadow-sky-500/10
-              transition-all duration-300 group flex flex-col"
+              transition-all duration-300 group flex flex-col relative"
             >
-              <h3 className="text-white font-semibold text-lg mb-2 group-hover:text-sky-400 transition-colors truncate" title={exam.title}>
-                {exam.title}
-              </h3>
+              <div className="flex justify-between items-start mb-2 gap-4">
+                <h3 className="text-white font-semibold text-lg group-hover:text-sky-400 transition-colors truncate" title={exam.title}>
+                  {exam.title}
+                </h3>
+                {exam.completedByMe && (
+                  <span 
+                    title="Bạn đã hoàn thành đề này. Bạn vẫn có thể làm lại."
+                    className="flex-shrink-0 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 whitespace-nowrap"
+                  >
+                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    Đã làm
+                  </span>
+                )}
+              </div>
+              
               <p className="text-white/40 text-sm mb-6 line-clamp-3 flex-grow">
                 {exam.description || 'Không có mô tả cho đề thi này.'}
               </p>

@@ -10,6 +10,7 @@ interface Exam {
   duration: number;
   isPublished: boolean;
   createdAt: string;
+  completedByMe?: boolean;
 }
 
 export default function AdminExamList() {
