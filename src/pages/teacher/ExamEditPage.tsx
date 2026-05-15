@@ -13,7 +13,7 @@ const examSchema = z.object({
   description: z.string().optional(),
   duration: z.coerce.number().min(1, "Thời gian phải ít nhất 1 phút"),
   isPublished: z.boolean().default(false),
-  visibility: z.enum(['public', 'class_only']).default('public'),
+  visibility: z.enum(["public", "class_only"]).default("public"),
 });
 
 type ExamForm = z.infer<typeof examSchema>;
@@ -55,7 +55,7 @@ export default function TeacherExamEdit() {
     resolver: zodResolver(examSchema),
     defaultValues: {
       isPublished: false,
-      visibility: 'public',
+      visibility: "public",
     },
   });
 
@@ -76,7 +76,7 @@ export default function TeacherExamEdit() {
         description: examData.description || "",
         duration: examData.duration,
         isPublished: examData.isPublished,
-        visibility: examData.visibility || 'public',
+        visibility: examData.visibility || "public",
       });
       setQuestions(examData.questions || []);
     }
@@ -101,7 +101,9 @@ export default function TeacherExamEdit() {
       toast.success("Đã lưu đề thi!");
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Có lỗi xảy ra khi lưu đề thi.");
+      toast.error(
+        err.response?.data?.message || "Có lỗi xảy ra khi lưu đề thi.",
+      );
     },
   });
 
@@ -170,7 +172,10 @@ export default function TeacherExamEdit() {
     }
 
     if (editingQuestionIdx !== null) {
-      toast("Tính năng sửa câu hỏi đang được cập nhật. Vui lòng xóa và thêm lại.", { icon: "⚠️" });
+      toast(
+        "Tính năng sửa câu hỏi đang được cập nhật. Vui lòng xóa và thêm lại.",
+        { icon: "⚠️" },
+      );
     } else {
       addQuestionMutation.mutate({
         ...newQuestion,
@@ -192,7 +197,10 @@ export default function TeacherExamEdit() {
           <span className="text-white/80">Xóa câu hỏi này?</span>
           <div className="flex gap-2">
             <button
-              onClick={() => { deleteQuestionMutation.mutate(questionId); toast.dismiss(t.id); }}
+              onClick={() => {
+                deleteQuestionMutation.mutate(questionId);
+                toast.dismiss(t.id);
+              }}
               className="px-3 py-1 bg-red-500 hover:bg-red-400 text-white text-xs rounded-lg transition-colors"
             >
               Xóa
@@ -405,11 +413,13 @@ export default function TeacherExamEdit() {
               Chế độ hiển thị
             </label>
             <select
-              {...register('visibility')}
+              {...register("visibility")}
               className="w-full px-4 py-3 rounded-xl bg-slate-800 border border-white/10 text-white focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all duration-200"
             >
               <option value="public">Công khai — tất cả mọi người thấy</option>
-              <option value="class_only">Chỉ lớp được giao — học sinh phải thuộc lớp</option>
+              <option value="class_only">
+                Chỉ lớp được giao — học sinh phải thuộc lớp
+              </option>
             </select>
           </div>
 
@@ -477,7 +487,12 @@ export default function TeacherExamEdit() {
           {addQuestionMutation.isPending ||
           bulkImportMutation.isPending ||
           deleteQuestionMutation.isPending ? (
-            <div className="text-center py-10 text-white/40">Đang xử lý...</div>
+            <div className="text-center py-20 bg-slate-900 rounded-2xl border border-white/10">
+              <div className="animate-spin h-8 w-8 border-4 border-sky-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+              <p className="text-white/40 text-sm font-bold uppercase tracking-widest">
+                Đang xử lý dữ liệu...
+              </p>
+            </div>
           ) : questions.length === 0 ? (
             <div className="text-center py-10 bg-slate-900 border-2 border-dashed border-white/10 rounded-2xl text-white/30 italic">
               Chưa có câu hỏi nào.
@@ -488,12 +503,12 @@ export default function TeacherExamEdit() {
               .map((q, idx) => (
                 <div
                   key={q.id || idx}
-                  className="bg-slate-900 p-4 rounded-2xl border border-white/10 flex items-start justify-between"
+                  className="bg-slate-900 p-6 rounded-2xl border border-white/10 hover:border-sky-500/30 transition-all group flex items-start justify-between"
                 >
-                  <div>
-                    <div className="flex items-center space-x-2 mb-1">
-                      <span className="font-bold text-indigo-400">
-                        Câu {q.order}:
+                  <div className="flex-grow">
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="flex-shrink-0 w-7 h-7 bg-sky-500/10 text-sky-400 border border-sky-500/20 rounded-lg flex items-center justify-center text-xs font-black">
+                        {q.order}
                       </span>
                       <span
                         className={`px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest border ${
@@ -505,21 +520,27 @@ export default function TeacherExamEdit() {
                         {q.type === "multiple" ? "Multiple" : "Single"}
                       </span>
                     </div>
-                    <p className="text-white">{q.content}</p>
-                    <div className="mt-2 space-y-1">
+                    <p className="text-white text-lg font-medium leading-relaxed mb-6">
+                      {q.content}
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {q.options
                         .sort((a, b) => a.order - b.order)
                         .map((opt, oIdx) => (
                           <div
                             key={opt.id || oIdx}
-                            className={`text-sm flex items-center gap-1 ${
+                            className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${
                               opt.isCorrect
-                                ? "text-green-400 font-semibold"
-                                : "text-white/40"
+                                ? "bg-green-500/10 border-green-500/30 text-green-400"
+                                : "bg-slate-800/50 border-white/5 text-white/40"
                             }`}
                           >
-                            <span>{String.fromCharCode(65 + oIdx)}.</span>
-                            <span className="flex-1">{opt.content}</span>
+                            <span className="font-black text-[10px] uppercase opacity-40">
+                              {String.fromCharCode(65 + oIdx)}
+                            </span>
+                            <span className="text-sm font-medium flex-1">
+                              {opt.content}
+                            </span>
                             {opt.isCorrect && (
                               <svg
                                 className="w-4 h-4 flex-shrink-0"
@@ -537,12 +558,25 @@ export default function TeacherExamEdit() {
                         ))}
                     </div>
                   </div>
-                  <div className="flex space-x-2 ml-4">
+                  <div className="flex items-center gap-2 ml-6">
                     <button
                       onClick={() => removeQuestion(idx)}
-                      className="text-red-400 hover:text-red-300 text-xs font-medium"
+                      className="p-2 text-white/20 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all"
+                      title="Xóa câu hỏi"
                     >
-                      Xóa
+                      <svg
+                        className="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
+                      </svg>
                     </button>
                   </div>
                 </div>
@@ -595,9 +629,18 @@ function QuestionFormModal({
   };
 
   const handleSave = () => {
-    if (!content.trim()) { toast.error("Nhập nội dung câu hỏi"); return; }
-    if (options.some((o) => !o.content.trim())) { toast.error("Vui lòng nhập đầy đủ các lựa chọn"); return; }
-    if (!options.some((o) => o.isCorrect)) { toast.error("Chọn ít nhất 1 đáp án đúng"); return; }
+    if (!content.trim()) {
+      toast.error("Nhập nội dung câu hỏi");
+      return;
+    }
+    if (options.some((o) => !o.content.trim())) {
+      toast.error("Vui lòng nhập đầy đủ các lựa chọn");
+      return;
+    }
+    if (!options.some((o) => o.isCorrect)) {
+      toast.error("Chọn ít nhất 1 đáp án đúng");
+      return;
+    }
 
     onSubmit({
       content,
