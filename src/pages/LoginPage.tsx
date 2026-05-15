@@ -163,6 +163,26 @@ export default function LoginPage() {
             >
               {loading ? "Đang đăng nhập..." : "Đăng nhập →"}
             </button>
+
+            <div className="mt-4 p-4 rounded-xl bg-slate-800/50 border border-white/5 space-y-1.5">
+              <p className="text-white/30 text-xs font-bold uppercase tracking-widest mb-2">
+                Hướng dẫn đăng nhập
+              </p>
+              <p className="text-white/40 text-xs">
+                Tài khoản:{" "}
+                <span className="text-white/60">&lt;mã sv&gt;@gmail.com</span>
+                <span className="text-white/20 mx-2">—</span>
+                <span className="text-sky-400/70">
+                  VD: b22dccn001@gmail.com
+                </span>
+              </p>
+              <p className="text-white/40 text-xs">
+                Mật khẩu:{" "}
+                <span className="text-white/60">&lt;mã sv viết hoa&gt;</span>
+                <span className="text-white/20 mx-2">—</span>
+                <span className="text-sky-400/70">VD: B22DCCN001</span>
+              </p>
+            </div>
           </form>
 
           <p className="text-center text-white/40 text-sm mt-6 hidden">
