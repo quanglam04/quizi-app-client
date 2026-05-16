@@ -169,7 +169,7 @@ export default function ExamResultPage() {
               </span>
               <div className="flex-grow">
                 <p className="text-lg text-white font-medium mb-6 leading-relaxed whitespace-pre-wrap">
-                  {item.questionContent}
+                  {item.questionContent.replace(/\\n/g, "\n")}
                 </p>
 
                 <div className="space-y-3 mb-6">

@@ -524,7 +524,7 @@ export default function TeacherExamEdit() {
                       </span>
                     </div>
                     <p className="text-white text-lg font-medium leading-relaxed mb-6 whitespace-pre-wrap">
-                      {q.content}
+                      {q.content.replace(/\\n/g, "\n")}
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {q.options
@@ -542,7 +542,7 @@ export default function TeacherExamEdit() {
                               {String.fromCharCode(65 + oIdx)}
                             </span>
                             <span className="text-sm font-medium flex-1">
-                              {opt.content}
+                              {opt.content.replace(/\\n/g, "\n")}
                             </span>
                             {opt.isCorrect && (
                               <svg
