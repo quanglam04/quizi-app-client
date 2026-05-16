@@ -168,10 +168,9 @@ export default function ExamResultPage() {
                 {idx + 1}
               </span>
               <div className="flex-grow">
-                <div
-                  className="text-lg text-white font-medium mb-6 leading-relaxed prose prose-invert max-w-none"
-                  dangerouslySetInnerHTML={{ __html: item.questionContent }}
-                />
+                <p className="text-lg text-white font-medium mb-6 leading-relaxed whitespace-pre-wrap">
+                  {item.questionContent}
+                </p>
 
                 <div className="space-y-3 mb-6">
                   {/* Your Answer */}
