@@ -175,24 +175,45 @@ export default function ExamResultPage() {
                 <div className="space-y-3 mb-6">
                   {/* Your Answer */}
                   <div className="flex flex-col gap-1.5">
-                    <span className="text-xs font-bold text-white/30 uppercase tracking-widest">
-                      Bạn chọn
-                    </span>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-white/30 uppercase tracking-widest">
+                        Bạn chọn
+                      </span>
+                      {(item.chosenOptionContent as string[]).length > 0 &&
+                        (item.isCorrect ? (
+                          <span className="text-xs font-bold text-green-400">
+                            ĐÚNG ✓
+                          </span>
+                        ) : (
+                          <span className="text-xs font-bold text-red-400">
+                            SAI ✗
+                          </span>
+                        ))}
+                    </div>
                     {(item.chosenOptionContent as string[]).length > 0 ? (
                       <div
-                        className={`flex items-center justify-between p-3 rounded-xl border ${
+                        className={`flex flex-col gap-2 p-3 rounded-xl border ${
                           item.isCorrect
-                            ? "bg-green-500/10 border-green-500/30 text-green-400"
-                            : "bg-red-500/10 border-red-500/30 text-red-400"
+                            ? "bg-green-500/10 border-green-500/30"
+                            : "bg-red-500/10 border-red-500/30"
                         }`}
                       >
-                        <span className="font-medium">
-                          {(item.chosenOptionContent as string[]).join(", ")}
-                        </span>
-                        {item.isCorrect ? (
-                          <span className="text-xs font-bold">ĐÚNG ✓</span>
-                        ) : (
-                          <span className="text-xs font-bold">SAI ✗</span>
+                        {(item.chosenOptionContent as string[]).map(
+                          (opt, i) => (
+                            <div
+                              key={i}
+                              className={`flex items-center gap-2 text-sm font-medium ${
+                                item.isCorrect
+                                  ? "text-green-400"
+                                  : "text-red-400"
+                              }`}
+                            >
+                              <span className="flex-shrink-0 w-5 h-5 rounded border flex items-center justify-center text-[10px] font-black opacity-60 border-current">
+                                {String.fromCharCode(65 + i)}
+                              </span>
+                              {opt}
+                            </div>
+                          ),
                         )}
                       </div>
                     ) : (
@@ -202,14 +223,24 @@ export default function ExamResultPage() {
                     )}
                   </div>
 
-                  {/* Correct Answer if you were wrong */}
+                  {/* Correct Answer if wrong */}
                   {!item.isCorrect && item.correctOptionContent && (
                     <div className="flex flex-col gap-1.5">
                       <span className="text-xs font-bold text-sky-400/30 uppercase tracking-widest">
                         Đáp án đúng
                       </span>
-                      <div className="p-3 rounded-xl border border-sky-500/30 bg-sky-500/10 text-sky-400 font-medium">
-                        {item.correctOptionContent}
+                      <div className="flex flex-col gap-2 p-3 rounded-xl border border-sky-500/30 bg-sky-500/10">
+                        {item.correctOptionContent.split(", ").map((opt, i) => (
+                          <div
+                            key={i}
+                            className="flex items-center gap-2 text-sm font-medium text-sky-400"
+                          >
+                            <span className="flex-shrink-0 w-5 h-5 rounded border border-sky-400/40 flex items-center justify-center text-[10px] font-black opacity-60">
+                              {String.fromCharCode(65 + i)}
+                            </span>
+                            {opt}
+                          </div>
+                        ))}
                       </div>
                     </div>
                   )}
