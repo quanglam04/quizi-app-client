@@ -273,10 +273,9 @@ export default function ExamTakePage() {
                   {idx + 1}
                 </span>
                 <div className="flex-1 pt-1">
-                  <div
-                    className="text-white font-medium leading-relaxed pt-1 prose prose-invert max-w-none"
-                    dangerouslySetInnerHTML={{ __html: q.content }}
-                  />
+                  <div className="text-white font-medium leading-relaxed pt-1 whitespace-pre-wrap">
+                    {q.content}
+                  </div>
                   <span
                     className={`inline-flex items-center mt-2 px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest border ${
                       q.type === "multiple"
