@@ -224,23 +224,25 @@ export default function ExamResultPage() {
                   </div>
 
                   {/* Correct Answer if wrong */}
-                  {!item.isCorrect && item.correctOptionContent && (
+                  {!item.isCorrect && item.correctOptions?.length > 0 && (
                     <div className="flex flex-col gap-1.5">
                       <span className="text-xs font-bold text-sky-400/30 uppercase tracking-widest">
                         Đáp án đúng
                       </span>
                       <div className="flex flex-col gap-2 p-3 rounded-xl border border-sky-500/30 bg-sky-500/10">
-                        {item.correctOptionContent.split(", ").map((opt, i) => (
-                          <div
-                            key={i}
-                            className="flex items-center gap-2 text-sm font-medium text-sky-400"
-                          >
-                            <span className="flex-shrink-0 w-5 h-5 rounded border border-sky-400/40 flex items-center justify-center text-[10px] font-black opacity-60">
-                              {String.fromCharCode(65 + i)}
-                            </span>
-                            {opt}
-                          </div>
-                        ))}
+                        {item.correctOptions
+                          .sort((a: any, b: any) => a.order - b.order)
+                          .map((opt: any, i: number) => (
+                            <div
+                              key={i}
+                              className="flex items-center gap-2 text-sm font-medium text-sky-400"
+                            >
+                              <span className="flex-shrink-0 w-5 h-5 rounded border border-sky-400/40 flex items-center justify-center text-[10px] font-black opacity-60">
+                                {String.fromCharCode(65 + opt.order)}
+                              </span>
+                              {opt.content}
+                            </div>
+                          ))}
                       </div>
                     </div>
                   )}
