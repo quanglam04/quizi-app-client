@@ -523,7 +523,7 @@ export default function TeacherExamEdit() {
                         {q.type === "multiple" ? "Multiple" : "Single"}
                       </span>
                     </div>
-                    <p className="text-white text-lg font-medium leading-relaxed mb-6">
+                    <p className="text-white text-lg font-medium leading-relaxed mb-6 whitespace-pre-wrap">
                       {q.content}
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

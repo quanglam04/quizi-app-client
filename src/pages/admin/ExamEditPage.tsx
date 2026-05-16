@@ -98,7 +98,9 @@ export default function AdminExamEdit() {
       toast.success("Đã lưu đề thi!");
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Có lỗi xảy ra khi lưu đề thi.");
+      toast.error(
+        err.response?.data?.message || "Có lỗi xảy ra khi lưu đề thi.",
+      );
     },
   });
 
@@ -167,7 +169,10 @@ export default function AdminExamEdit() {
     }
 
     if (editingQuestionIdx !== null) {
-      toast("Tính năng sửa câu hỏi đang được cập nhật. Vui lòng xóa và thêm lại.", { icon: "⚠️" });
+      toast(
+        "Tính năng sửa câu hỏi đang được cập nhật. Vui lòng xóa và thêm lại.",
+        { icon: "⚠️" },
+      );
     } else {
       addQuestionMutation.mutate({
         ...newQuestion,
@@ -189,7 +194,10 @@ export default function AdminExamEdit() {
           <span className="text-white/80">Xóa câu hỏi này?</span>
           <div className="flex gap-2">
             <button
-              onClick={() => { deleteQuestionMutation.mutate(questionId); toast.dismiss(t.id); }}
+              onClick={() => {
+                deleteQuestionMutation.mutate(questionId);
+                toast.dismiss(t.id);
+              }}
               className="px-3 py-1 bg-red-500 hover:bg-red-400 text-white text-xs rounded-lg transition-colors"
             >
               Xóa
@@ -463,7 +471,9 @@ export default function AdminExamEdit() {
           deleteQuestionMutation.isPending ? (
             <div className="text-center py-20 bg-slate-900 rounded-2xl border border-white/10">
               <div className="animate-spin h-8 w-8 border-4 border-sky-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-              <p className="text-white/40 text-sm font-bold uppercase tracking-widest">Đang xử lý dữ liệu...</p>
+              <p className="text-white/40 text-sm font-bold uppercase tracking-widest">
+                Đang xử lý dữ liệu...
+              </p>
             </div>
           ) : questions.length === 0 ? (
             <div className="text-center py-16 bg-slate-900 border-2 border-dashed border-white/5 rounded-2xl text-white/20 italic">
@@ -492,7 +502,9 @@ export default function AdminExamEdit() {
                         {q.type === "multiple" ? "Multiple" : "Single"}
                       </span>
                     </div>
-                    <p className="text-white text-lg font-medium leading-relaxed mb-6">{q.content}</p>
+                    <p className="text-white text-lg font-medium leading-relaxed mb-6 whitespace-pre-wrap">
+                      {q.content}
+                    </p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {q.options
                         .sort((a, b) => a.order - b.order)
@@ -508,7 +520,9 @@ export default function AdminExamEdit() {
                             <span className="font-black text-[10px] uppercase opacity-40">
                               {String.fromCharCode(65 + oIdx)}
                             </span>
-                            <span className="text-sm font-medium flex-1">{opt.content}</span>
+                            <span className="text-sm font-medium flex-1">
+                              {opt.content}
+                            </span>
                             {opt.isCorrect && (
                               <svg
                                 className="w-4 h-4 flex-shrink-0"
@@ -532,8 +546,18 @@ export default function AdminExamEdit() {
                       className="p-2 text-white/20 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all"
                       title="Xóa câu hỏi"
                     >
-                      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      <svg
+                        className="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
                       </svg>
                     </button>
                   </div>
@@ -587,9 +611,18 @@ function QuestionFormModal({
   };
 
   const handleSave = () => {
-    if (!content.trim()) { toast.error("Nhập nội dung câu hỏi"); return; }
-    if (options.some((o) => !o.content.trim())) { toast.error("Vui lòng nhập đầy đủ các lựa chọn"); return; }
-    if (!options.some((o) => o.isCorrect)) { toast.error("Chọn ít nhất 1 đáp án đúng"); return; }
+    if (!content.trim()) {
+      toast.error("Nhập nội dung câu hỏi");
+      return;
+    }
+    if (options.some((o) => !o.content.trim())) {
+      toast.error("Vui lòng nhập đầy đủ các lựa chọn");
+      return;
+    }
+    if (!options.some((o) => o.isCorrect)) {
+      toast.error("Chọn ít nhất 1 đáp án đúng");
+      return;
+    }
 
     onSubmit({
       content,
@@ -645,7 +678,9 @@ function QuestionFormModal({
               </label>
               <select
                 value={type}
-                onChange={(e) => setType(e.target.value as "single" | "multiple")}
+                onChange={(e) =>
+                  setType(e.target.value as "single" | "multiple")
+                }
                 className="w-full px-4 py-3 rounded-xl bg-slate-800 border border-white/10 text-white focus:outline-none focus:border-sky-500 transition-all"
               >
                 <option value="single">Single Choice</option>
