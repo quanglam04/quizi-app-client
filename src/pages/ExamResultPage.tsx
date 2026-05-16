@@ -57,7 +57,7 @@ export default function ExamResultPage() {
   const groupedDetail = Object.values(
     detail.reduce(
       (acc, item) => {
-        const key = item.questionContent; // dùng content vì không có questionId trong interface
+        const key = item.questionId;
         if (!acc[key]) {
           acc[key] = {
             ...item,
@@ -71,6 +71,8 @@ export default function ExamResultPage() {
               item.chosenOptionContent,
             );
           }
+          // isCorrect của câu MCQ: chỉ đúng khi tất cả row đều đúng
+          if (!item.isCorrect) acc[key].isCorrect = false;
         }
         return acc;
       },
