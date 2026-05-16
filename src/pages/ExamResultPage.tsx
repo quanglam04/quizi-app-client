@@ -3,8 +3,10 @@ import { useParams, Link } from "react-router-dom";
 import { api } from "../lib/api";
 
 interface ResultDetail {
+  questionId: string;
   questionContent: string;
   questionExplain: string | null;
+  questionType: "single" | "multiple";
   chosenOptionId: string | null;
   chosenOptionContent: string | null;
   correctOptionContent: string | null;
