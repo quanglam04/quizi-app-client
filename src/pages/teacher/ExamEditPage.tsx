@@ -290,14 +290,17 @@ export default function TeacherExamEdit() {
           .filter((c) => ["A", "B", "C", "D"].includes(c));
 
         const optionLabels = ["A", "B", "C", "D"];
+        const restoreNewlines = (str: string) => str.replace(/\\n/g, "\n");
         const options: Option[] = optionLabels.map((label, idx) => ({
-          content: String(row[label] || ""),
+          content: restoreNewlines(String(row[label] || "")),
           order: idx,
           isCorrect: correctLetters.includes(label),
         }));
 
         return {
-          content: String(row["Cau hoi"] || row["Câu hỏi"] || ""),
+          content: restoreNewlines(
+            String(row["Cau hoi"] || row["Câu hỏi"] || ""),
+          ),
           type,
           order: Number(row["STT"]) || questions.length + 1,
           explain: row["Giai thich"] ? String(row["Giai thich"]) : null,
