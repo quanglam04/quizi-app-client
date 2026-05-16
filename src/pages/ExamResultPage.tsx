@@ -168,9 +168,10 @@ export default function ExamResultPage() {
                 {idx + 1}
               </span>
               <div className="flex-grow">
-                <p className="text-lg text-white font-medium mb-6 leading-relaxed">
-                  {item.questionContent}
-                </p>
+                <div
+                  className="text-lg text-white font-medium mb-6 leading-relaxed prose prose-invert max-w-none"
+                  dangerouslySetInnerHTML={{ __html: item.questionContent }}
+                />
 
                 <div className="space-y-3 mb-6">
                   {/* Your Answer */}
@@ -240,7 +241,11 @@ export default function ExamResultPage() {
                               <span className="flex-shrink-0 w-5 h-5 rounded border border-sky-400/40 flex items-center justify-center text-[10px] font-black opacity-60">
                                 {String.fromCharCode(65 + opt.order)}
                               </span>
-                              {opt.content}
+                              <span
+                                dangerouslySetInnerHTML={{
+                                  __html: opt.content,
+                                }}
+                              />
                             </div>
                           ))}
                       </div>

@@ -273,9 +273,10 @@ export default function ExamTakePage() {
                   {idx + 1}
                 </span>
                 <div className="flex-1 pt-1">
-                  <p className="text-white font-medium leading-relaxed">
-                    {q.content}
-                  </p>
+                  <div
+                    className="text-white font-medium leading-relaxed pt-1 prose prose-invert max-w-none"
+                    dangerouslySetInnerHTML={{ __html: q.content }}
+                  />
                   <span
                     className={`inline-flex items-center mt-2 px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest border ${
                       q.type === "multiple"
@@ -321,7 +322,10 @@ export default function ExamTakePage() {
                             <span className="w-2 h-2 rounded-full bg-white" />
                           )}
                         </span>
-                        <span className="text-sm">{opt.content}</span>
+                        <span
+                          className="text-sm"
+                          dangerouslySetInnerHTML={{ __html: opt.content }}
+                        />
                       </button>
                     );
                   })}
