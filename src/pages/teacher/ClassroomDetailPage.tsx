@@ -42,9 +42,18 @@ interface TeacherExam {
   visibility: string;
 }
 
+interface LeaderboardEntry {
+  userId: string;
+  name: string;
+  email: string;
+  avgScore: number | null;
+  examCount: number;
+  rank: number | null;
+}
+
 const ClassroomDetailPage = () => {
   const { id } = useParams<{ id: string }>();
-  const [activeTab, setActiveTab] = useState<'members' | 'exams'>('members');
+  const [activeTab, setActiveTab] = useState<'members' | 'exams' | 'leaderboard'>('members');
   const [selectedExamId, setSelectedExamId] = useState('');
 
   const queryClient = useQueryClient();
@@ -72,6 +81,15 @@ const ClassroomDetailPage = () => {
       const res = await api.get('/exams/teacher/my');
       return res.data;
     },
+  });
+
+  const { data: leaderboard, isLoading: isLoadingLeaderboard } = useQuery<LeaderboardEntry[]>({
+    queryKey: ['classroom-leaderboard', id],
+    queryFn: async () => {
+      const res = await api.get(`/classrooms/${id}/leaderboard`);
+      return res.data;
+    },
+    enabled: activeTab === 'leaderboard',
   });
 
   // Mutations
@@ -173,10 +191,20 @@ const ClassroomDetailPage = () => {
         >
           Đề thi đã giao ({assignedExams?.length || 0})
         </button>
+        <button
+          onClick={() => setActiveTab('leaderboard')}
+          className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
+            activeTab === 'leaderboard'
+              ? 'border-sky-500 text-sky-400'
+              : 'border-transparent text-white/40 hover:text-white hover:border-white/20'
+          }`}
+        >
+          🏆 Bảng xếp hạng
+        </button>
       </div>
 
       {/* Tab Content */}
-      {activeTab === 'members' ? (
+      {activeTab === 'members' && (
         <div className="space-y-8">
           {/* Pending Requests */}
           {pendingMembers.length > 0 && (
@@ -287,7 +315,9 @@ const ClassroomDetailPage = () => {
             </div>
           </div>
         </div>
-      ) : (
+      )}
+
+      {activeTab === 'exams' && (
         <div className="space-y-8">
           {/* Assign New Exam */}
           <div className="bg-slate-900 p-6 rounded-2xl border border-white/10">
@@ -397,6 +427,112 @@ const ClassroomDetailPage = () => {
               </table>
             </div>
           </div>
+        </div>
+      )}
+
+      {activeTab === 'leaderboard' && (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-bold text-white">Bảng xếp hạng lớp</h2>
+            <p className="text-white/40 text-xs">
+              Xếp theo điểm cao nhất trung bình tất cả đề
+            </p>
+          </div>
+
+          {isLoadingLeaderboard ? (
+            <div className="text-center py-20 bg-slate-900 rounded-2xl border border-white/10">
+              <div className="animate-spin h-8 w-8 border-4 border-sky-500 border-t-transparent rounded-full mx-auto mb-4" />
+              <p className="text-white/40 text-sm">Đang tải bảng xếp hạng...</p>
+            </div>
+          ) : (
+            <div className="bg-slate-900 rounded-2xl border border-white/10 overflow-hidden">
+              <table className="min-w-full divide-y divide-white/5">
+                <thead className="bg-slate-800">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-bold text-white/40 uppercase tracking-widest w-16">
+                      Hạng
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-bold text-white/40 uppercase tracking-widest">
+                      Học sinh
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-bold text-white/40 uppercase tracking-widest">
+                      Số đề đã làm
+                    </th>
+                    <th className="px-6 py-3 text-right text-xs font-bold text-white/40 uppercase tracking-widest">
+                      Điểm TB
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  {leaderboard?.length === 0 ? (
+                    <tr>
+                      <td
+                        colSpan={4}
+                        className="px-6 py-12 text-center text-white/30 italic"
+                      >
+                        Chưa có dữ liệu xếp hạng
+                      </td>
+                    </tr>
+                  ) : (
+                    leaderboard?.map((entry) => (
+                      <tr
+                        key={entry.userId}
+                        className="hover:bg-white/5 transition-colors"
+                      >
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {entry.rank === 1 ? (
+                            <span className="text-xl">🥇</span>
+                          ) : entry.rank === 2 ? (
+                            <span className="text-xl">🥈</span>
+                          ) : entry.rank === 3 ? (
+                            <span className="text-xl">🥉</span>
+                          ) : entry.rank ? (
+                            <span className="text-sm font-bold text-white/40">
+                              #{entry.rank}
+                            </span>
+                          ) : (
+                            <span className="text-sm text-white/20">—</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm font-bold text-white">
+                            {entry.name}
+                          </div>
+                          <div className="text-xs text-white/30">{entry.email}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-white/40">
+                          {entry.examCount > 0 ? (
+                            `${entry.examCount} đề`
+                          ) : (
+                            <span className="italic text-white/20">
+                              Chưa làm bài
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right">
+                          {entry.avgScore !== null ? (
+                            <span
+                              className={`text-lg font-black ${
+                                entry.avgScore >= 80
+                                  ? 'text-green-400'
+                                  : entry.avgScore >= 60
+                                    ? 'text-sky-400'
+                                    : 'text-red-400'
+                              }`}
+                            >
+                              {entry.avgScore}%
+                            </span>
+                          ) : (
+                            <span className="text-white/20 text-sm italic">—</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       )}
     </div>
