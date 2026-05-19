@@ -34,7 +34,7 @@ export default function BlogPostPage() {
 
   if (isLoading)
     return (
-      <div className="max-w-3xl mx-auto p-6">
+      <div className="max-w-4xl mx-auto p-6">
         <div className="h-8 bg-slate-700 rounded w-3/4 mb-4 animate-pulse" />
         <div className="h-4 bg-slate-700/50 rounded w-32 mb-8 animate-pulse" />
         <SkeletonText lines={8} />
@@ -60,7 +60,7 @@ export default function BlogPostPage() {
   }
 
   return (
-    <article className="max-w-3xl mx-auto py-12 px-4 sm:px-0 pb-32">
+    <article className="max-w-4xl mx-auto py-12 px-4 sm:px-0 pb-32">
       <Link
         to="/blog"
         className="inline-flex items-center gap-2 text-sm font-bold text-white/40 hover:text-sky-400 mb-12 transition-all"

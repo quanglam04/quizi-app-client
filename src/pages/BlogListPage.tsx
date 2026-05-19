@@ -22,7 +22,7 @@ export default function BlogListPage() {
 
   if (isLoading) {
     return (
-      <div className="p-6 space-y-4 max-w-4xl mx-auto">
+      <div className="p-6 space-y-4">
         {Array.from({ length: 4 }).map((_, i) => (
           <SkeletonCard key={i} />
         ))}
@@ -39,7 +39,7 @@ export default function BlogListPage() {
   }
 
   return (
-    <div className="space-y-12 max-w-4xl mx-auto pb-20">
+    <div className="space-y-12 pb-20">
       <div className="flex flex-col md:flex-row md:items-baseline md:justify-between border-b border-white/10 pb-6">
         <h1 className="text-3xl font-black text-white">Blog ôn luyện</h1>
         <p className="mt-2 text-sm text-white/40 md:mt-0 italic">Chia sẻ kinh nghiệm và kiến thức thi cử</p>
@@ -50,7 +50,7 @@ export default function BlogListPage() {
           Hiện tại chưa có bài viết nào.
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {posts?.map((post) => (
             <Link
               key={post.id}
