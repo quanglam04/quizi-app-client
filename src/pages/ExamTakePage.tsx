@@ -50,9 +50,13 @@ export default function ExamTakePage() {
         const examData = examRes.data;
         setExam(examData);
         setTimeLeft(examData.duration * 60);
-      } catch (err) {
+      } catch (err: any) {
         console.error("Failed to start exam:", err);
-        toast.error("Không thể bắt đầu bài thi. Vui lòng thử lại.");
+        if (err.response?.data?.code === "MAX_ATTEMPTS_REACHED") {
+          toast.error(err.response.data.error || "Bạn đã hết lượt làm bài cho đề này.", { duration: 5000 });
+        } else {
+          toast.error("Không thể bắt đầu bài thi. Vui lòng thử lại.");
+        }
         navigate("/home");
       } finally {
         setLoading(false);

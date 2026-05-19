@@ -14,6 +14,7 @@ const examSchema = z.object({
   duration: z.coerce.number().min(1, "Thời gian phải ít nhất 1 phút"),
   isPublished: z.boolean().default(false),
   visibility: z.enum(["public", "class_only"]).default("public"),
+  maxAttempts: z.coerce.number().min(1, "Số lần làm tối thiểu là 1").default(5),
 });
 
 type ExamForm = z.infer<typeof examSchema>;
@@ -56,6 +57,7 @@ export default function TeacherExamEdit() {
     defaultValues: {
       isPublished: false,
       visibility: "public",
+      maxAttempts: 5,
     },
   });
 
@@ -77,6 +79,7 @@ export default function TeacherExamEdit() {
         duration: examData.duration,
         isPublished: examData.isPublished,
         visibility: examData.visibility || "public",
+        maxAttempts: examData.maxAttempts ?? 5,
       });
       setQuestions(examData.questions || []);
     }
@@ -409,6 +412,22 @@ export default function TeacherExamEdit() {
                 {errors.duration.message}
               </p>
             )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-white/70 mb-2">
+              Số lần làm tối đa
+            </label>
+            <input
+              type="number"
+              min={1}
+              {...register("maxAttempts")}
+              className="w-full px-4 py-3 rounded-xl bg-slate-800 border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all duration-200"
+            />
+            {errors.maxAttempts && (
+              <p className="mt-1 text-xs text-red-400">{errors.maxAttempts.message}</p>
+            )}
+            <p className="mt-1 text-xs text-white/20">Mặc định 5 lần.</p>
           </div>
 
           <div>

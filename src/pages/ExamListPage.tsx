@@ -11,6 +11,8 @@ interface Exam {
   isPublished: boolean;
   createdAt: string;
   completedByMe?: boolean;
+  maxAttempts?: number;
+  attemptsUsed?: number;
 }
 
 export default function ExamListPage() {
@@ -87,21 +89,59 @@ export default function ExamListPage() {
                 {exam.description || 'Không có mô tả cho đề thi này.'}
               </p>
               
-              <div className="flex items-center justify-between mt-auto">
-                <span className="flex items-center gap-1.5 text-white/40 text-sm">
-                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  {exam.duration} phút
-                </span>
-                <button
-                  onClick={() => navigate(`/exams/${exam.id}/take`)}
-                  className="px-4 py-2 bg-sky-500 hover:bg-sky-400 text-white text-sm
-                  rounded-lg font-medium hover:scale-105 transition-all duration-200"
-                >
-                  Làm bài →
-                </button>
-              </div>
+              {
+                (() => {
+                  const maxAttempts = exam.maxAttempts ?? 5;
+                  const attemptsUsed = exam.attemptsUsed ?? 0;
+                  const isExhausted = attemptsUsed >= maxAttempts;
+
+                  return (
+                    <div className="flex items-center justify-between mt-auto">
+                      <div className="flex flex-col gap-1">
+                        <span className="flex items-center gap-1.5 text-white/40 text-sm">
+                          <svg
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                          {exam.duration} phút
+                        </span>
+                        <span
+                          className={`text-xs font-medium ${
+                            isExhausted ? "text-red-400" : "text-white/30"
+                          }`}
+                        >
+                          {attemptsUsed}/{maxAttempts} lượt
+                        </span>
+                      </div>
+                      {isExhausted ? (
+                        <span
+                          title="Bạn đã hết lượt làm bài cho đề này"
+                          className="px-4 py-2 bg-white/5 border border-white/10 text-white/30 text-sm rounded-lg font-medium cursor-not-allowed"
+                        >
+                          Hết lượt
+                        </span>
+                      ) : (
+                        <button
+                          onClick={() => navigate(`/exams/${exam.id}/take`)}
+                          className="px-4 py-2 bg-sky-500 hover:bg-sky-400 text-white text-sm
+                        rounded-lg font-medium hover:scale-105 transition-all duration-200"
+                        >
+                          Làm bài →
+                        </button>
+                      )}
+                    </div>
+                  );
+                })()
+              }
             </div>
           ))}
         </div>

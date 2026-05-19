@@ -13,6 +13,7 @@ const examSchema = z.object({
   description: z.string().optional(),
   duration: z.coerce.number().min(1, "Thời gian phải ít nhất 1 phút"),
   isPublished: z.boolean().default(false),
+  maxAttempts: z.coerce.number().min(1, "Số lần làm tối thiểu là 1").default(5),
 });
 
 type ExamForm = z.infer<typeof examSchema>;
@@ -54,6 +55,7 @@ export default function AdminExamEdit() {
     resolver: zodResolver(examSchema),
     defaultValues: {
       isPublished: false,
+      maxAttempts: 5,
     },
   });
 
@@ -74,6 +76,7 @@ export default function AdminExamEdit() {
         description: examData.description || "",
         duration: examData.duration,
         isPublished: examData.isPublished,
+        maxAttempts: examData.maxAttempts ?? 5,
       });
       setQuestions(examData.questions || []);
     }
@@ -406,6 +409,23 @@ export default function AdminExamEdit() {
                 {errors.duration.message}
               </p>
             )}
+          </div>
+          <div>
+            <label className="block text-sm font-bold text-white/60 mb-2 uppercase tracking-widest">
+              Số lần làm tối đa
+            </label>
+            <input
+              type="number"
+              min={1}
+              {...register("maxAttempts")}
+              className="w-full px-4 py-3 rounded-xl bg-slate-800 border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all duration-200"
+            />
+            {errors.maxAttempts && (
+              <p className="mt-2 text-xs text-red-400">{errors.maxAttempts.message}</p>
+            )}
+            <p className="mt-1 text-xs text-white/20">
+              Mặc định 5 lần. Candidate vượt quá sẽ không làm được nữa.
+            </p>
           </div>
           <div className="flex items-center h-full pt-6">
             <label className="flex items-center gap-3 cursor-pointer group">
