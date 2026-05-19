@@ -25,7 +25,11 @@ export default function HistoryPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [examFilter, setExamFilter] = useState("");
 
-  const { data: sessions, isLoading, error } = useQuery<Session[]>({
+  const {
+    data: sessions,
+    isLoading,
+    error,
+  } = useQuery<Session[]>({
     queryKey: isAdmin
       ? ["admin-sessions"]
       : isTeacher
@@ -59,7 +63,10 @@ export default function HistoryPage() {
     : [];
 
   const filteredSessions = sessions
-    ?.sort((a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime())
+    ?.sort(
+      (a, b) =>
+        new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime(),
+    )
     .filter((s) => {
       if (!isAdmin && !isTeacher) return true;
       const search = searchTerm.toLowerCase();
@@ -106,8 +113,18 @@ export default function HistoryPage() {
                 className="w-full pl-11 pr-4 py-2.5 bg-slate-800 border border-white/10 rounded-xl text-white placeholder-white/20 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all duration-200"
               />
               <div className="absolute left-4 top-3 text-white/30">
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                <svg
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
                 </svg>
               </div>
             </div>
@@ -121,7 +138,9 @@ export default function HistoryPage() {
               >
                 <option value="">Tất cả đề thi</option>
                 {examTitles.map((title) => (
-                  <option key={title} value={title}>{title}</option>
+                  <option key={title} value={title}>
+                    {title}
+                  </option>
                 ))}
               </select>
             )}
@@ -193,11 +212,15 @@ export default function HistoryPage() {
                             <div className="text-sm font-bold text-white group-hover:text-sky-400 transition-colors">
                               {session.userName}
                             </div>
-                            <div className="text-xs text-white/40">{session.userEmail}</div>
+                            <div className="text-xs text-white/40">
+                              {session.userEmail}
+                            </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span className="text-xs font-mono font-bold text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded">
-                              {session.userEmail ? getStudentId(session.userEmail) : "N/A"}
+                              {session.userEmail
+                                ? getStudentId(session.userEmail)
+                                : "N/A"}
                             </span>
                           </td>
                         </>
@@ -229,14 +252,36 @@ export default function HistoryPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-white/40">
                         <div className="font-medium text-white/60">
-                          {new Date(session.startedAt).toLocaleDateString("vi-VN")}
+                          {new Date(session.startedAt).toLocaleDateString(
+                            "vi-VN",
+                          )}
                         </div>
                         <div className="text-xs">
-                          {new Date(session.startedAt).toLocaleTimeString("vi-VN", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
+                          {new Date(session.startedAt).toLocaleTimeString(
+                            "vi-VN",
+                            {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            },
+                          )}
                         </div>
+                        {session.submittedAt &&
+                          (() => {
+                            const ms =
+                              new Date(session.submittedAt).getTime() -
+                              new Date(session.startedAt).getTime();
+                            const totalMinutes = Math.floor(ms / 60000);
+                            const hours = Math.floor(totalMinutes / 60);
+                            const minutes = totalMinutes % 60;
+                            const seconds = Math.floor((ms % 60000) / 1000);
+                            return (
+                              <div className="text-xs mt-1 text-sky-400/60 font-medium">
+                                ⏱ {hours > 0 ? `${hours}g ` : ""}
+                                {minutes > 0 ? `${minutes}p ` : ""}
+                                {seconds}s
+                              </div>
+                            );
+                          })()}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         {isSubmitted && (
