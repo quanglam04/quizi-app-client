@@ -51,10 +51,21 @@ interface LeaderboardEntry {
   rank: number | null;
 }
 
+interface Notification {
+  id: string;
+  title: string;
+  content: string;
+  createdAt: string;
+}
+
 const ClassroomDetailPage = () => {
   const { id } = useParams<{ id: string }>();
-  const [activeTab, setActiveTab] = useState<'members' | 'exams' | 'leaderboard'>('members');
+  const [activeTab, setActiveTab] = useState<
+    "members" | "exams" | "leaderboard" | "notifications"
+  >("members");
   const [selectedExamId, setSelectedExamId] = useState('');
+  const [notifTitle, setNotifTitle] = useState("");
+  const [notifContent, setNotifContent] = useState("");
 
   const queryClient = useQueryClient();
 
@@ -90,6 +101,17 @@ const ClassroomDetailPage = () => {
       return res.data;
     },
     enabled: activeTab === 'leaderboard',
+  });
+
+  const { data: classroomNotifs, isLoading: isLoadingNotifs } = useQuery<
+    Notification[]
+  >({
+    queryKey: ["classroom-notifs", id],
+    queryFn: async () => {
+      const res = await api.get(`/notifications/classroom/${id}`);
+      return res.data;
+    },
+    enabled: activeTab === "notifications",
   });
 
   // Mutations
@@ -134,6 +156,33 @@ const ClassroomDetailPage = () => {
     onSuccess: () => {
       toast.success('Đã bỏ giao đề');
       queryClient.invalidateQueries({ queryKey: ['classroom-exams', id] });
+    },
+  });
+
+  const createNotifMutation = useMutation({
+    mutationFn: async (data: { title: string; content: string }) => {
+      const res = await api.post("/notifications", {
+        classroomId: id,
+        ...data,
+      });
+      return res.data;
+    },
+    onSuccess: () => {
+      toast.success("Đã gửi thông báo!");
+      setNotifTitle("");
+      setNotifContent("");
+      queryClient.invalidateQueries({ queryKey: ["classroom-notifs", id] });
+    },
+    onError: () => toast.error("Gửi thông báo thất bại"),
+  });
+
+  const deleteNotifMutation = useMutation({
+    mutationFn: async (notifId: string) => {
+      await api.delete(`/notifications/${notifId}`);
+    },
+    onSuccess: () => {
+      toast.success("Đã xóa thông báo");
+      queryClient.invalidateQueries({ queryKey: ["classroom-notifs", id] });
     },
   });
 
@@ -200,6 +249,16 @@ const ClassroomDetailPage = () => {
           }`}
         >
           🏆 Bảng xếp hạng
+        </button>
+        <button
+          onClick={() => setActiveTab("notifications")}
+          className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
+            activeTab === "notifications"
+              ? "border-sky-500 text-sky-400"
+              : "border-transparent text-white/40 hover:text-white hover:border-white/20"
+          }`}
+        >
+          🔔 Thông báo
         </button>
       </div>
 
@@ -533,6 +592,150 @@ const ClassroomDetailPage = () => {
               </table>
             </div>
           )}
+        </div>
+      )}
+
+      {activeTab === "notifications" && (
+        <div className="space-y-8">
+          {/* Form tạo thông báo mới */}
+          <div className="bg-slate-900 p-6 rounded-2xl border border-white/10 space-y-4">
+            <h2 className="text-lg font-bold text-white">Gửi thông báo mới</h2>
+            <div>
+              <label className="block text-sm font-medium text-white/60 mb-2">
+                Tiêu đề
+              </label>
+              <input
+                type="text"
+                value={notifTitle}
+                onChange={(e) => setNotifTitle(e.target.value)}
+                placeholder="Nhập tiêu đề thông báo..."
+                className="w-full px-4 py-3 rounded-xl bg-slate-800 border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all duration-200"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-white/60 mb-2">
+                Nội dung
+              </label>
+              <textarea
+                value={notifContent}
+                onChange={(e) => setNotifContent(e.target.value)}
+                rows={3}
+                placeholder="Nhập nội dung thông báo..."
+                className="w-full px-4 py-3 rounded-xl bg-slate-800 border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all duration-200"
+              />
+            </div>
+            <div className="flex justify-end">
+              <button
+                onClick={() => {
+                  if (!notifTitle.trim() || !notifContent.trim()) {
+                    toast.error("Vui lòng nhập đầy đủ tiêu đề và nội dung");
+                    return;
+                  }
+                  createNotifMutation.mutate({
+                    title: notifTitle,
+                    content: notifContent,
+                  });
+                }}
+                disabled={createNotifMutation.isPending}
+                className="px-6 py-2.5 bg-sky-500 hover:bg-sky-400 text-white rounded-xl font-semibold transition-all disabled:opacity-50"
+              >
+                {createNotifMutation.isPending ? "Đang gửi..." : "Gửi thông báo →"}
+              </button>
+            </div>
+          </div>
+
+          {/* Danh sách thông báo đã gửi */}
+          <div>
+            <h2 className="text-lg font-bold text-white mb-4">
+              Thông báo đã gửi ({classroomNotifs?.length ?? 0})
+            </h2>
+            {isLoadingNotifs ? (
+              <div className="text-center py-10 text-white/40">Đang tải...</div>
+            ) : classroomNotifs?.length === 0 ? (
+              <div className="text-center py-10 bg-slate-900 border border-dashed border-white/10 rounded-2xl text-white/30 italic">
+                Chưa có thông báo nào được gửi
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {classroomNotifs?.map((notif) => (
+                  <div
+                    key={notif.id}
+                    className="bg-slate-900 p-5 rounded-2xl border border-white/10 hover:border-sky-500/20 transition-all group flex items-start justify-between gap-4"
+                  >
+                    <div className="flex-grow">
+                      <p className="text-white font-semibold mb-1">{notif.title}</p>
+                      <p className="text-white/50 text-sm leading-relaxed">
+                        {notif.content}
+                      </p>
+                      <p className="text-white/20 text-xs mt-2">
+                        {new Date(notif.createdAt).toLocaleDateString("vi-VN", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        toast(
+                          (t) => (
+                            <div className="flex items-center gap-3">
+                              <span className="text-white/80">
+                                Xóa thông báo này?
+                              </span>
+                              <div className="flex gap-2">
+                                <button
+                                  onClick={() => {
+                                    deleteNotifMutation.mutate(notif.id);
+                                    toast.dismiss(t.id);
+                                  }}
+                                  className="px-3 py-1 bg-red-500 hover:bg-red-400 text-white text-xs rounded-lg transition-colors"
+                                >
+                                  Xóa
+                                </button>
+                                <button
+                                  onClick={() => toast.dismiss(t.id)}
+                                  className="px-3 py-1 bg-slate-600 hover:bg-slate-500 text-white/70 text-xs rounded-lg transition-colors"
+                                >
+                                  Hủy
+                                </button>
+                              </div>
+                            </div>
+                          ),
+                          {
+                            duration: 5000,
+                            style: {
+                              background: "#1e293b",
+                              border: "1px solid rgba(248,113,113,0.3)",
+                              borderRadius: "12px",
+                              padding: "12px 16px",
+                            },
+                          }
+                        );
+                      }}
+                      className="flex-shrink-0 p-2 text-white/20 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all"
+                    >
+                      <svg
+                        className="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>

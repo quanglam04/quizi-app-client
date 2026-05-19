@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../lib/api';
+import { useAuthStore, api } from '../lib/api';
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -10,6 +11,57 @@ export default function Layout({ children }: LayoutProps) {
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
   const [adminOpen, setAdminOpen] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
+  const queryClient = useQueryClient();
+
+  // Chỉ fetch khi là candidate
+  const { data: unreadData } = useQuery({
+    queryKey: ["unread-count"],
+    queryFn: async () => {
+      const res = await api.get("/notifications/unread-count");
+      return res.data as { count: number };
+    },
+    enabled: user?.role === "candidate",
+    refetchInterval: 30000, // poll mỗi 30 giây
+  });
+
+  const { data: notifications } = useQuery({
+    queryKey: ["notifications-my"],
+    queryFn: async () => {
+      const res = await api.get("/notifications/my");
+      return res.data as {
+        id: string;
+        classroomId: string;
+        title: string;
+        content: string;
+        createdAt: string;
+        isRead: boolean;
+      }[];
+    },
+    enabled: user?.role === "candidate" && notifOpen,
+  });
+
+  const readMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await api.post(`/notifications/${id}/read`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["unread-count"] });
+      queryClient.invalidateQueries({ queryKey: ["notifications-my"] });
+    },
+  });
+
+  const readAllMutation = useMutation({
+    mutationFn: async () => {
+      await api.post("/notifications/read-all");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["unread-count"] });
+      queryClient.invalidateQueries({ queryKey: ["notifications-my"] });
+    },
+  });
+
+  const unreadCount = unreadData?.count ?? 0;
 
   const handleLogout = () => {
     logout();
@@ -169,6 +221,109 @@ export default function Layout({ children }: LayoutProps) {
             <div className="flex items-center gap-4">
               {user ? (
                 <div className="flex items-center gap-4">
+                  {/* Bell icon — chỉ hiện với candidate */}
+                  {user?.role === "candidate" && (
+                    <div className="relative">
+                      <button
+                        onClick={() => setNotifOpen(!notifOpen)}
+                        className="relative p-2 rounded-xl text-white/50 hover:text-white hover:bg-white/10 transition-all duration-200"
+                      >
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                          />
+                        </svg>
+                        {unreadCount > 0 && (
+                          <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] font-black rounded-full flex items-center justify-center">
+                            {unreadCount > 9 ? "9+" : unreadCount}
+                          </span>
+                        )}
+                      </button>
+
+                      {/* Dropdown thông báo */}
+                      {notifOpen && (
+                        <>
+                          {/* Overlay để click outside đóng dropdown */}
+                          <div
+                            className="fixed inset-0 z-40"
+                            onClick={() => setNotifOpen(false)}
+                          />
+                          <div className="absolute right-0 top-[calc(100%+8px)] w-80 bg-slate-800 border border-white/10 rounded-2xl shadow-2xl shadow-black/40 z-50 overflow-hidden">
+                            {/* Header dropdown */}
+                            <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
+                              <span className="text-sm font-bold text-white">Thông báo</span>
+                              {unreadCount > 0 && (
+                                <button
+                                  onClick={() => readAllMutation.mutate()}
+                                  className="text-xs text-sky-400 hover:text-sky-300 font-medium transition-colors"
+                                >
+                                  Đánh dấu tất cả đã đọc
+                                </button>
+                              )}
+                            </div>
+
+                            {/* Danh sách thông báo */}
+                            <div className="max-h-96 overflow-y-auto">
+                              {!notifications || notifications.length === 0 ? (
+                                <div className="px-4 py-8 text-center text-white/30 text-sm italic">
+                                  Không có thông báo nào
+                                </div>
+                              ) : (
+                                notifications.map((notif) => (
+                                  <div
+                                    key={notif.id}
+                                    onClick={() => {
+                                      if (!notif.isRead) readMutation.mutate(notif.id);
+                                    }}
+                                    className={`px-4 py-3 border-b border-white/5 cursor-pointer transition-colors hover:bg-white/5 ${
+                                      !notif.isRead ? "bg-sky-500/5" : ""
+                                    }`}
+                                  >
+                                    <div className="flex items-start gap-2">
+                                      {!notif.isRead && (
+                                        <span className="flex-shrink-0 w-2 h-2 bg-sky-400 rounded-full mt-1.5" />
+                                      )}
+                                      <div className={!notif.isRead ? "" : "ml-4"}>
+                                        <p
+                                          className={`text-sm font-semibold ${
+                                            notif.isRead ? "text-white/60" : "text-white"
+                                          }`}
+                                        >
+                                          {notif.title}
+                                        </p>
+                                        <p className="text-xs text-white/40 mt-0.5 line-clamp-2">
+                                          {notif.content}
+                                        </p>
+                                        <p className="text-[10px] text-white/20 mt-1">
+                                          {new Date(notif.createdAt).toLocaleDateString(
+                                            "vi-VN",
+                                            {
+                                              day: "numeric",
+                                              month: "short",
+                                              hour: "2-digit",
+                                              minute: "2-digit",
+                                            }
+                                          )}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                ))
+                              )}
+                            </div>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  )}
                   <span className="text-sm text-white/60">Chào, {user.name}</span>
                   <button
                     onClick={handleLogout}
