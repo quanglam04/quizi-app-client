@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { useAuthStore, api } from '../lib/api';
+import React, { useState } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useAuthStore, api } from "../lib/api";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface LayoutProps {
@@ -12,6 +12,13 @@ export default function Layout({ children }: LayoutProps) {
   const navigate = useNavigate();
   const [adminOpen, setAdminOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
+  const [selectedNotif, setSelectedNotif] = useState<{
+    id: string;
+    title: string;
+    content: string;
+    createdAt: string;
+    isRead: boolean;
+  } | null>(null);
   const queryClient = useQueryClient();
 
   // Chỉ fetch khi là candidate
@@ -22,7 +29,7 @@ export default function Layout({ children }: LayoutProps) {
       return res.data as { count: number };
     },
     enabled: user?.role === "candidate",
-    refetchInterval: 30000, // poll mỗi 30 giây
+    refetchInterval: 30000,
   });
 
   const { data: notifications } = useQuery({
@@ -65,7 +72,7 @@ export default function Layout({ children }: LayoutProps) {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate("/login");
   };
 
   return (
@@ -74,13 +81,16 @@ export default function Layout({ children }: LayoutProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center gap-8">
-              <Link to="/home" className="flex items-center gap-2 font-black text-xl">
+              <Link
+                to="/home"
+                className="flex items-center gap-2 font-black text-xl"
+              >
                 <span className="text-sky-400">✦</span>
                 <span className="text-white">QuizApp</span>
               </Link>
-              
+
               <div className="hidden sm:flex items-center gap-6">
-                {user?.role === 'candidate' && (
+                {user?.role === "candidate" && (
                   <>
                     <NavLink
                       to="/home"
@@ -121,7 +131,7 @@ export default function Layout({ children }: LayoutProps) {
                   </>
                 )}
 
-                {user?.role === 'teacher' && (
+                {user?.role === "teacher" && (
                   <>
                     <NavLink
                       to="/teacher/classrooms"
@@ -162,7 +172,7 @@ export default function Layout({ children }: LayoutProps) {
                   </>
                 )}
 
-                {user?.role === 'admin' && (
+                {user?.role === "admin" && (
                   <>
                     <NavLink
                       to="/blog"
@@ -181,14 +191,23 @@ export default function Layout({ children }: LayoutProps) {
                       <button className="flex items-center gap-1 text-sm font-medium text-white/60 hover:text-white transition-colors duration-200 py-2">
                         Admin
                         <svg
-                          className={`w-4 h-4 transition-transform duration-200 ${adminOpen ? 'rotate-180' : ''}`}
-                          fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                          className={`w-4 h-4 transition-transform duration-200 ${adminOpen ? "rotate-180" : ""}`}
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
                         >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 9l-7 7-7-7"
+                          />
                         </svg>
                       </button>
 
-                      {adminOpen && <div className="absolute top-full left-0 w-full h-2" />}
+                      {adminOpen && (
+                        <div className="absolute top-full left-0 w-full h-2" />
+                      )}
 
                       {adminOpen && (
                         <div className="absolute top-[calc(100%+4px)] left-0 w-52 bg-slate-800 border border-white/10 rounded-xl shadow-xl shadow-black/30 overflow-hidden z-50 py-1">
@@ -217,7 +236,7 @@ export default function Layout({ children }: LayoutProps) {
                 )}
               </div>
             </div>
-            
+
             <div className="flex items-center gap-4">
               {user ? (
                 <div className="flex items-center gap-4">
@@ -251,7 +270,6 @@ export default function Layout({ children }: LayoutProps) {
                       {/* Dropdown thông báo */}
                       {notifOpen && (
                         <>
-                          {/* Overlay để click outside đóng dropdown */}
                           <div
                             className="fixed inset-0 z-40"
                             onClick={() => setNotifOpen(false)}
@@ -259,7 +277,9 @@ export default function Layout({ children }: LayoutProps) {
                           <div className="absolute right-0 top-[calc(100%+8px)] w-80 bg-slate-800 border border-white/10 rounded-2xl shadow-2xl shadow-black/40 z-50 overflow-hidden">
                             {/* Header dropdown */}
                             <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
-                              <span className="text-sm font-bold text-white">Thông báo</span>
+                              <span className="text-sm font-bold text-white">
+                                Thông báo
+                              </span>
                               {unreadCount > 0 && (
                                 <button
                                   onClick={() => readAllMutation.mutate()}
@@ -281,7 +301,10 @@ export default function Layout({ children }: LayoutProps) {
                                   <div
                                     key={notif.id}
                                     onClick={() => {
-                                      if (!notif.isRead) readMutation.mutate(notif.id);
+                                      if (!notif.isRead)
+                                        readMutation.mutate(notif.id);
+                                      setSelectedNotif(notif);
+                                      setNotifOpen(false);
                                     }}
                                     className={`px-4 py-3 border-b border-white/5 cursor-pointer transition-colors hover:bg-white/5 ${
                                       !notif.isRead ? "bg-sky-500/5" : ""
@@ -291,11 +314,11 @@ export default function Layout({ children }: LayoutProps) {
                                       {!notif.isRead && (
                                         <span className="flex-shrink-0 w-2 h-2 bg-sky-400 rounded-full mt-1.5" />
                                       )}
-                                      <div className={!notif.isRead ? "" : "ml-4"}>
+                                      <div
+                                        className={!notif.isRead ? "" : "ml-4"}
+                                      >
                                         <p
-                                          className={`text-sm font-semibold ${
-                                            notif.isRead ? "text-white/60" : "text-white"
-                                          }`}
+                                          className={`text-sm font-semibold ${notif.isRead ? "text-white/60" : "text-white"}`}
                                         >
                                           {notif.title}
                                         </p>
@@ -303,15 +326,14 @@ export default function Layout({ children }: LayoutProps) {
                                           {notif.content}
                                         </p>
                                         <p className="text-[10px] text-white/20 mt-1">
-                                          {new Date(notif.createdAt).toLocaleDateString(
-                                            "vi-VN",
-                                            {
-                                              day: "numeric",
-                                              month: "short",
-                                              hour: "2-digit",
-                                              minute: "2-digit",
-                                            }
-                                          )}
+                                          {new Date(
+                                            notif.createdAt,
+                                          ).toLocaleDateString("vi-VN", {
+                                            day: "numeric",
+                                            month: "short",
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                          })}
                                         </p>
                                       </div>
                                     </div>
@@ -324,7 +346,9 @@ export default function Layout({ children }: LayoutProps) {
                       )}
                     </div>
                   )}
-                  <span className="text-sm text-white/60">Chào, {user.name}</span>
+                  <span className="text-sm text-white/60">
+                    Chào, {user.name}
+                  </span>
                   <button
                     onClick={handleLogout}
                     className="px-4 py-1.5 rounded-lg text-sm
@@ -364,6 +388,59 @@ export default function Layout({ children }: LayoutProps) {
           </p>
         </div>
       </footer>
+
+      {/* Modal xem chi tiết thông báo */}
+      {selectedNotif && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-slate-900 rounded-2xl border border-white/10 shadow-2xl w-full max-w-md overflow-hidden">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
+              <h3 className="text-white font-bold text-base">
+                {selectedNotif.title}
+              </h3>
+              <button
+                onClick={() => setSelectedNotif(null)}
+                className="text-white/40 hover:text-white transition-colors"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div className="px-6 py-5">
+              <p className="text-white/70 text-sm leading-relaxed whitespace-pre-wrap">
+                {selectedNotif.content}
+              </p>
+              <p className="text-white/20 text-xs mt-4">
+                {new Date(selectedNotif.createdAt).toLocaleDateString("vi-VN", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </p>
+            </div>
+            <div className="px-6 py-4 border-t border-white/10 flex justify-end">
+              <button
+                onClick={() => setSelectedNotif(null)}
+                className="px-5 py-2 bg-slate-800 hover:bg-slate-700 text-white/70 hover:text-white rounded-xl text-sm font-medium transition-all"
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
